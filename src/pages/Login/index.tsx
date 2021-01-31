@@ -51,7 +51,7 @@ const Login: React.FC = () => {
                     value={login}
                     onChange={({ target }) => setLogin(target.value)}
                   />
-                  <FiUser color="#0E66A8" size="16" />
+                  <FiUser color="#0E66A8" size="18" />
                 </span>
               </section>
               <section>
@@ -67,24 +67,27 @@ const Login: React.FC = () => {
                   />
                   {isPasswordVisible ? (
                     <FiEyeOff
+                      style={{ cursor: 'pointer' }}
                       color="#0E66A8"
-                      size="16"
+                      size="18"
                       onClick={() => setIsPasswordVisible(!isPasswordVisible)}
                     />
                   ) : (
                     <FiEye
                       color="#0E66A8"
-                      size="16"
+                      style={{ cursor: 'pointer' }}
+                      size="18"
                       onClick={() => setIsPasswordVisible(!isPasswordVisible)}
                     />
                   )}
                 </span>
               </section>
-
-              <button type="submit">Entrar</button>
+              <article>
+                <button type="submit">Entrar</button>
+              </article>
             </fieldset>
           </form>
-          <a href="/">Esqueceu a senha? Clique aqui</a>
+          {/* <a href="/">Esqueceu a senha? Clique aqui</a> */}
         </RightSide>
       </Content>
     </Container>
