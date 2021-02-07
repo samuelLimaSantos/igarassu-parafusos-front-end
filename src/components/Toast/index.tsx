@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useEffect } from 'react';
 
-import { FiAlertCircle, FiCheckCircle } from 'react-icons/fi';
+import { FiAlertCircle, FiCheckCircle, FiXCircle } from 'react-icons/fi';
 import { Container, Content, Bar } from './style';
 
 interface ToastProps {
@@ -15,9 +15,13 @@ const Toast: React.FC<ToastProps> = ({
   setShowToast,
 }: ToastProps) => {
   useEffect(() => {
-    setTimeout(() => {
+    const timeOut = setTimeout(() => {
       setShowToast(false);
-    }, 3990);
+    }, 2990);
+
+    return () => {
+      clearTimeout(timeOut);
+    };
   }, [setShowToast]);
 
   return (
@@ -30,6 +34,14 @@ const Toast: React.FC<ToastProps> = ({
             <FiAlertCircle color="#fff" size={26} />
           )}
           <h4>{message}</h4>
+          <FiXCircle
+            color="#fff"
+            style={{
+              cursor: 'pointer',
+            }}
+            onClick={() => setShowToast(false)}
+            size={20}
+          />
         </div>
         <Bar className={type} />
       </Content>

@@ -8,6 +8,12 @@ export const Content = styled.div`
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
+
+  @media (max-width: 950px) {
+    & {
+      grid-template-columns: 1fr;
+    }
+  }
 `;
 
 export const LeftSide = styled.section`
@@ -27,6 +33,12 @@ export const LeftSide = styled.section`
     justify-self: center;
     align-self: center;
     width: 480px;
+  }
+
+  @media (max-width: 950px) {
+    & {
+      display: none;
+    }
   }
 `;
 

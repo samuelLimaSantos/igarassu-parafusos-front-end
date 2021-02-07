@@ -5,7 +5,7 @@ import { Container, Content, LeftSide, RightSide } from './styles';
 import logoImage from '../../assets/logo.svg';
 import loginImage from '../../assets/login-image.svg';
 import { Context } from '../../context';
-import api from '../../services';
+import api from '../../services/api';
 import Loading from '../../components/Loading';
 import Toast from '../../components/Toast';
 

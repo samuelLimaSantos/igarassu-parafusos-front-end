@@ -21,14 +21,20 @@ export const Content = styled.div`
   min-height: 40px;
   border-radius: 10px;
   animation: fadein 0.4s ease-in;
-  /* border-bottom: 8px solid #F29292; */
+  box-shadow: 1px 4px 6px 1px rgba(0, 0, 0, 0.25);
+
   div {
-    display: flex;
+    display: grid;
     align-items: center;
+    grid-template-columns: 10% 85% 5%;
     padding: 8px;
     margin-bottom: 8px;
     & > svg {
       margin-right: 16px;
+    }
+
+    svg:last-child {
+      align-self: flex-start;
     }
   }
 
@@ -36,7 +42,7 @@ export const Content = styled.div`
     color: #fff;
     font-size: 18px;
     font-weight: normal;
-    max-width: 300px;
+    max-width: 270px;
   }
 
   @-webkit-keyframes fadein {
@@ -67,7 +73,7 @@ export const Bar = styled.section`
   margin-top: -10px;
   border-radius: 10px;
   width: 100%;
-  animation: progressbar 4s ease-in;
+  animation: progressbar 3s ease-in;
 
   @-webkit-keyframes progressbar {
     from {
