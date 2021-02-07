@@ -11,8 +11,8 @@ export default createGlobalStyle`
     --secondary-details: #FAB10A;
     --dark: #13324E;
     --light: #EDF1F6;
-    --danger: #F1C2C2;
-    --confirm: #CBEEC2;
+    --danger: #D40707;
+    --confirm: #00B564;
     --background: #ECF4FF;
   }
   html,

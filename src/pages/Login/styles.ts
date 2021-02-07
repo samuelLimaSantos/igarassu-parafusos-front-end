@@ -67,16 +67,17 @@ export const RightSide = styled.section`
           display: flex;
           align-items: center;
           border-radius: 8px;
-          background: #e9e9e9;
-          box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+          border: 1px solid #dedede;
+          background-color: #fdfdfd;
 
           input {
+            border-radius: 8px;
+
             height: 42px;
             width: 90%;
             padding: 8px;
             font-weight: normal;
             font-size: 14px;
-            background-color: transparent;
             border: none;
             outline: none;
           }
