@@ -1,4 +1,4 @@
-import { useState, useCallback, useContext } from 'react';
+import { useState, useCallback, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { FiSearch, FiXCircle, FiLogOut } from 'react-icons/fi';
 import logo from '../../assets/logo.svg';
@@ -24,6 +24,11 @@ interface ToastProps {
   type: 'error' | 'success';
 }
 
+interface Categories {
+  id: number;
+  title: string;
+}
+
 const Header: React.FC = () => {
   const [search, setSearch] = useState('');
   const [toggle, setToggle] = useState(true);
@@ -34,8 +39,21 @@ const Header: React.FC = () => {
     message: '',
     type: 'error',
   });
+  const [categories, setCategories] = useState<Categories[]>([]);
   const { handleLogout } = useContext(Context);
   const history = useHistory();
+  const token = localStorage.getItem('igarassu-parafusos:token');
+
+  useEffect(() => {
+    api
+      .get('/categories', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(response => setCategories(response.data))
+      .catch(error => console.log(error));
+  }, []);
 
   const handleSearchWithFilters = useCallback(async () => {
     if (!search && !type && !category) {
@@ -150,9 +168,16 @@ const Header: React.FC = () => {
               <input
                 type="text"
                 placeholder="Categoria"
+                id="category"
+                list="categories"
                 value={category}
                 onChange={({ target }) => setCategory(target.value)}
               />
+              <datalist id="categories">
+                {categories.map(category => (
+                  <option value={category.title} />
+                ))}
+              </datalist>
             </section>
           </div>
 
