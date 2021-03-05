@@ -1,14 +1,19 @@
-import drillImage from '../../assets/drill.svg';
+import { useState } from 'react';
 import { IProduct } from '../../interfaces';
 import { Container, Header, Description, Footer } from './styles';
+import { parseImage } from '../../utils/parseImage';
 
 const Card: React.FC<IProduct> = (product: IProduct) => {
+  const [image] = useState(parseImage(product.image_id));
+
   return (
     <Container>
       <Header>
         <section className="block">
-          <img src={drillImage} alt="Ícone do produto" />
-          <h1>{product.name}</h1>
+          <img src={image} alt="Ícone do produto" />
+          <h1>
+            {product.cod} {product.name}
+          </h1>
         </section>
         <section className="price">
           <strong>R$ {product.price_sell.replace('.', ',')}</strong>
@@ -29,6 +34,7 @@ const Card: React.FC<IProduct> = (product: IProduct) => {
           </p>
           <p style={{ backgroundColor: 'rgba(242, 146, 146, 0.2)' }}>
             {product.quantity} {product.unity}
+            {product.quantity > 1 && `s`}
           </p>
         </section>
 

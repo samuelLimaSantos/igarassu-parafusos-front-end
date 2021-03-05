@@ -5,6 +5,8 @@ export const Container = styled.div`
   box-shadow: 1px 4px 6px 1px rgba(0, 0, 0, 0.25);
   border-radius: 12px;
   padding: 16px;
+  display: grid;
+  grid-template-columns: 1fr;
 `;
 
 export const Header = styled.section`
@@ -19,7 +21,7 @@ export const Header = styled.section`
     img {
       width: 70px;
       border-radius: 50%;
-      margin-right: 8px;
+      margin-right: 16px;
     }
 
     h1 {

@@ -1,4 +1,11 @@
-import { useState, useCallback, useContext, useEffect } from 'react';
+import {
+  useState,
+  useCallback,
+  useContext,
+  useEffect,
+  SetStateAction,
+  Dispatch,
+} from 'react';
 import { useHistory } from 'react-router-dom';
 import { FiSearch, FiXCircle, FiLogOut } from 'react-icons/fi';
 import logo from '../../assets/logo.svg';
@@ -18,6 +25,7 @@ import {
   Divider,
 } from './styles';
 import Toast from '../Toast';
+import { IProduct } from '../../interfaces';
 
 interface ToastProps {
   message: string;
@@ -29,12 +37,17 @@ interface Categories {
   title: string;
 }
 
-const Header: React.FC = () => {
+interface IHeadProps {
+  setProducts: Dispatch<SetStateAction<never[]>>;
+}
+
+const Header: React.FC<IHeadProps> = ({ setProducts }: IHeadProps) => {
   const [search, setSearch] = useState('');
   const [toggle, setToggle] = useState(true);
   const [type, setType] = useState('');
   const [category, setCategory] = useState('');
   const [showToast, setShowToast] = useState(false);
+  const [goBack, setGoBack] = useState(false);
   const [toastInfo, setToastInfo] = useState<ToastProps>({
     message: '',
     type: 'error',
@@ -53,7 +66,7 @@ const Header: React.FC = () => {
       })
       .then(response => setCategories(response.data))
       .catch(error => console.log(error));
-  }, []);
+  }, [token]);
 
   const handleSearchWithFilters = useCallback(async () => {
     if (!search && !type && !category) {
@@ -78,8 +91,11 @@ const Header: React.FC = () => {
           type,
           category,
           cod: toggle ? '' : search,
+          page: 1,
         },
       });
+      setProducts(data.products);
+      setGoBack(true);
     } catch (error) {
       setShowToast(true);
       setToastInfo({
@@ -87,7 +103,34 @@ const Header: React.FC = () => {
         type: 'error',
       });
     }
-  }, [search, type, category, toggle]);
+  }, [search, type, category, toggle, setProducts]);
+
+  const handleAllProducts = useCallback(async () => {
+    const token = localStorage.getItem('igarassu-parafusos:token');
+
+    try {
+      const Authorization = `Bearer ${token}`;
+      const { data } = await api.get('/products', {
+        headers: {
+          Authorization,
+        },
+        params: {
+          page: 1,
+        },
+      });
+      setProducts(data.products);
+      setSearch('');
+      setType('');
+      setCategory('');
+      setGoBack(false);
+    } catch (error) {
+      setShowToast(true);
+      setToastInfo({
+        message: error.response.data.message,
+        type: 'error',
+      });
+    }
+  }, [setProducts]);
 
   const handleAppLogout = useCallback(() => {
     handleLogout();
@@ -103,6 +146,15 @@ const Header: React.FC = () => {
           message={toastInfo.message}
           type={toastInfo.type}
         />
+      )}
+      {goBack && (
+        <div
+          onClick={() => {
+            handleAllProducts();
+          }}
+        >
+          Voltar
+        </div>
       )}
       <Content>
         <LeftSide>
