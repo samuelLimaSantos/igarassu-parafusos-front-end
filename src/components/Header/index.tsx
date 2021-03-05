@@ -66,7 +66,6 @@ const Header: React.FC = () => {
     }
 
     const token = localStorage.getItem('igarassu-parafusos:token');
-    console.log(token);
 
     try {
       const Authorization = `Bearer ${token}`;
@@ -81,12 +80,10 @@ const Header: React.FC = () => {
           cod: toggle ? '' : search,
         },
       });
-      console.log(data);
     } catch (error) {
-      console.log(error.response.data.message.message);
       setShowToast(true);
       setToastInfo({
-        message: error.response.data.message.message,
+        message: error.response.data.message,
         type: 'error',
       });
     }
@@ -175,7 +172,7 @@ const Header: React.FC = () => {
               />
               <datalist id="categories">
                 {categories.map(category => (
-                  <option value={category.title} />
+                  <option key={category.id} value={category.title} />
                 ))}
               </datalist>
             </section>

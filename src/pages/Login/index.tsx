@@ -42,7 +42,7 @@ const Login: React.FC = () => {
       } catch (error) {
         setIsLoading(false);
         setToastInfo({
-          message: error.response.data,
+          message: error.response.data.message,
           type: 'error',
         });
         setShowToast(true);

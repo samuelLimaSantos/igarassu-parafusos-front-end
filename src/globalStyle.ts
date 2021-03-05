@@ -13,7 +13,7 @@ export default createGlobalStyle`
     --light: #EDF1F6;
     --danger: #D40707;
     --confirm: #00B564;
-    --background: #ECF4FF;
+    --background: #F9F9F9;
   }
   html,
   body,

@@ -16,6 +16,7 @@ export const Content = styled.div`
 export const LeftSide = styled.div`
   display: flex;
   align-items: center;
+  width: 100%;
 `;
 
 export const Search = styled.div`
@@ -36,7 +37,7 @@ export const Search = styled.div`
     border: none;
     outline: none;
     font-weight: normal;
-    width: 280px;
+    width: 80%;
     margin-right: 8px;
   }
 
