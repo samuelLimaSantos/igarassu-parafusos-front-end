@@ -1,45 +1,62 @@
-import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useState, useEffect, useCallback, useContext } from 'react';
 import Card from '../../components/Card';
 import Header from '../../components/Header';
 import { Container, Content, NewProduct, Cards, Advisor, Top } from './styles';
 import api from '../../services/api';
 import { IProduct } from '../../interfaces';
-
-interface ILocation {
-  products: IProduct[];
-}
+import { Context } from '../../context';
+import { Paginator } from '../../components/Paginator';
 
 const Products: React.FC = () => {
   const token = localStorage.getItem('igarassu-parafusos:token');
-  const [products, setProducts] = useState([]);
-  const [page, setPage] = useState(1);
-  const location = useLocation<ILocation>();
-  // const filteredProducts = location.state.products;
 
-  // if (filteredProducts.length > 0) {
-  //   setProducts(filteredProducts as SetStateAction<never[]>);
-  // }
+  const {
+    products,
+    setProducts,
+    actualPage,
+    setActualPage,
+    totalPages,
+    setTotalPages,
+    totalProducts,
+    setTotalProducts,
+  } = useContext(Context);
+
+  const getProducts = useCallback(
+    (page: number) => {
+      api
+        .get('/products', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            page,
+          },
+        })
+        .then(response => {
+          setProducts(response.data.products);
+          setTotalPages(response.data.totalPages);
+          setActualPage(response.data.actualPage);
+          setTotalProducts(response.data.totalProducts);
+        })
+        .catch(error => console.log(error.response.data.message));
+    },
+    [token, setProducts, setActualPage, setTotalPages, setTotalProducts],
+  );
+
   useEffect(() => {
-    api
-      .get('/products', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          page,
-        },
-      })
-      .then(response => setProducts(response.data.products))
-      .catch(error => console.log(error.response.data.message));
-  }, [token, page]);
+    getProducts(1);
+  }, [getProducts]);
 
   return (
     <Container>
-      <Header setProducts={setProducts} />
+      <Header />
       <Content>
         <Top>
-          <Advisor>Foram encontrados {products.length} resultados:</Advisor>
+          <Advisor>
+            {totalProducts >= 1
+              ? `${totalProducts} produto(s) encontrado(s):`
+              : `Nenhum produto foi encontrado :(`}
+          </Advisor>
           <NewProduct className="advisor">Cadastrar novo produto</NewProduct>
         </Top>
         <Cards>
@@ -48,6 +65,11 @@ const Products: React.FC = () => {
           ))}
         </Cards>
       </Content>
+      <Paginator
+        numberOfPages={totalPages}
+        actualPage={actualPage}
+        changePage={getProducts}
+      />
     </Container>
   );
 };

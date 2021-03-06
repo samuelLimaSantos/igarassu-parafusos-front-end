@@ -1,16 +1,34 @@
-import React, { createContext, useState, useEffect, useCallback } from 'react';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+} from 'react';
 
 const Context = createContext({
   authenticated: false,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   login(token: string, userId: string) {},
   token: '',
   handleLogout() {},
+  products: [],
+  setProducts(value: React.SetStateAction<never[]>) {},
+  totalPages: 0,
+  setTotalPages(value: React.SetStateAction<number>) {},
+  actualPage: 0,
+  setActualPage(value: React.SetStateAction<number>) {},
+  totalProducts: 0,
+  setTotalProducts(value: React.SetStateAction<number>) {},
 });
 
 const AuthProvider: React.FC = ({ children }) => {
   const [authenticated, setAuthenticated] = useState(false);
   const [token, setToken] = useState('');
+  const [products, setProducts] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const [actualPage, setActualPage] = useState(0);
+  const [totalProducts, setTotalProducts] = useState(0);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -36,18 +54,38 @@ const AuthProvider: React.FC = ({ children }) => {
     localStorage.removeItem('igarassu-parafusos:userId');
   }, []);
 
-  return (
-    <Context.Provider
-      value={{
-        authenticated,
-        login,
-        token,
-        handleLogout,
-      }}
-    >
-      {children}
-    </Context.Provider>
+  const provided = useMemo(
+    () => ({
+      authenticated,
+      login,
+      token,
+      handleLogout,
+      products,
+      setProducts,
+      totalPages,
+      setTotalPages,
+      actualPage,
+      setActualPage,
+      totalProducts,
+      setTotalProducts,
+    }),
+    [
+      authenticated,
+      login,
+      token,
+      handleLogout,
+      products,
+      setProducts,
+      totalPages,
+      setTotalPages,
+      actualPage,
+      setActualPage,
+      totalProducts,
+      setTotalProducts,
+    ],
   );
+
+  return <Context.Provider value={provided}>{children}</Context.Provider>;
 };
 
 export { Context, AuthProvider };

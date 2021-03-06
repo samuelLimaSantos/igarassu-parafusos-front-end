@@ -20,3 +20,19 @@ export interface ICategory {
   id: number;
   title: string;
 }
+
+export interface ToastProps {
+  message: string;
+  type: 'error' | 'success';
+}
+
+export interface Categories {
+  id: number;
+  title: string;
+}
+
+export interface IPaginatorDTO {
+  numberOfPages: number;
+  actualPage: number;
+  changePage: (page: number) => void;
+}

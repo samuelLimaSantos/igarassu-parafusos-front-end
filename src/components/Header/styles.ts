@@ -133,3 +133,27 @@ export const RightSide = styled.div`
     margin-left: 40px;
   }
 `;
+
+export const BreadCrumb = styled.div`
+  margin: 0 auto;
+  max-width: 1200px;
+
+  font-size: 24px;
+  margin-top: 24px;
+
+  span {
+    width: 100px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    svg {
+      margin-right: 6px;
+    }
+
+    transition: color 0.1s;
+  }
+
+  span:hover {
+    color: var(--primary);
+  }
+`;
