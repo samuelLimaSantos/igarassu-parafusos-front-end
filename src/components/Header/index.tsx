@@ -22,12 +22,7 @@ import {
 } from './styles';
 
 const Header: React.FC = () => {
-  const [search, setSearch] = useState('');
-  const [toggle, setToggle] = useState(true);
-  const [type, setType] = useState('');
-  const [category, setCategory] = useState('');
   const [showToast, setShowToast] = useState(false);
-  const [goBack, setGoBack] = useState(false);
   const [toastInfo, setToastInfo] = useState<ToastProps>({
     message: '',
     type: 'error',
@@ -35,10 +30,17 @@ const Header: React.FC = () => {
   const [categories, setCategories] = useState<Categories[]>([]);
   const {
     handleLogout,
-    setProducts,
-    setActualPage,
-    setTotalPages,
-    setTotalProducts,
+    getProducts,
+    getProductsWithFilters,
+    goBack,
+    toggle,
+    setToggle,
+    type,
+    setType,
+    search,
+    setSearch,
+    category,
+    setCategory,
   } = useContext(Context);
   const history = useHistory();
   const token = localStorage.getItem('igarassu-parafusos:token');
@@ -53,85 +55,6 @@ const Header: React.FC = () => {
       .then(response => setCategories(response.data))
       .catch(error => console.log(error));
   }, [token]);
-
-  const handleSearchWithFilters = useCallback(async () => {
-    if (!search && !type && !category) {
-      setShowToast(true);
-      setToastInfo({
-        message: 'Você deve preencher ao menos um dos campos',
-        type: 'error',
-      });
-      return;
-    }
-
-    const token = localStorage.getItem('igarassu-parafusos:token');
-
-    try {
-      const Authorization = `Bearer ${token}`;
-      const { data } = await api.get('/products/filter', {
-        headers: {
-          Authorization,
-        },
-        params: {
-          name: toggle ? search : '',
-          type,
-          category,
-          cod: toggle ? '' : search,
-          page: 1,
-        },
-      });
-      setProducts(data.products);
-      setTotalPages(data.totalPages);
-      setActualPage(data.actualPage);
-      setTotalProducts(data.totalProducts);
-      setGoBack(true);
-    } catch (error) {
-      setShowToast(true);
-      setToastInfo({
-        message: error.response.data.message,
-        type: 'error',
-      });
-    }
-  }, [
-    search,
-    type,
-    category,
-    toggle,
-    setProducts,
-    setTotalProducts,
-    setTotalPages,
-    setActualPage,
-  ]);
-
-  const handleAllProducts = useCallback(async () => {
-    const token = localStorage.getItem('igarassu-parafusos:token');
-
-    try {
-      const Authorization = `Bearer ${token}`;
-      const { data } = await api.get('/products', {
-        headers: {
-          Authorization,
-        },
-        params: {
-          page: 1,
-        },
-      });
-      setProducts(data.products);
-      setTotalPages(data.totalPages);
-      setActualPage(data.actualPage);
-      setTotalProducts(data.totalProducts);
-      setSearch('');
-      setType('');
-      setCategory('');
-      setGoBack(false);
-    } catch (error) {
-      setShowToast(true);
-      setToastInfo({
-        message: error.response.data.message,
-        type: 'error',
-      });
-    }
-  }, [setProducts, setActualPage, setTotalPages, setTotalProducts]);
 
   const handleAppLogout = useCallback(() => {
     handleLogout();
@@ -157,7 +80,9 @@ const Header: React.FC = () => {
                 color="#9A9595"
                 size={24}
                 cursor="pointer"
-                onClick={handleSearchWithFilters}
+                onClick={() => {
+                  getProductsWithFilters(search, type, category, 1);
+                }}
               />
               <input
                 type="text"
@@ -240,7 +165,10 @@ const Header: React.FC = () => {
       {goBack && (
         <BreadCrumb
           onClick={() => {
-            handleAllProducts();
+            getProducts(1);
+            setSearch('');
+            setType('');
+            setCategory('');
           }}
         >
           <span>

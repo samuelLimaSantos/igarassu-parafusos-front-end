@@ -8,3 +8,4 @@
 [x] - Fazer a lógica de pesquisa
 [x] - Isolar a requisição de produtos em um hook
 [x] - Estilizar o breadcrumb de voltar para pesquisa geral
+[] - Limpar todo o projeto

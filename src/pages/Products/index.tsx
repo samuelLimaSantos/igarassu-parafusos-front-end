@@ -1,47 +1,34 @@
+/* eslint-disable no-unused-expressions */
 import { useState, useEffect, useCallback, useContext } from 'react';
+import Paginate from 'react-paginate';
 import Card from '../../components/Card';
 import Header from '../../components/Header';
-import { Container, Content, NewProduct, Cards, Advisor, Top } from './styles';
 import api from '../../services/api';
 import { IProduct } from '../../interfaces';
 import { Context } from '../../context';
 import { Paginator } from '../../components/Paginator';
+import {
+  Container,
+  Content,
+  NewProduct,
+  Cards,
+  Advisor,
+  Top,
+  ContainerPaginator,
+} from './styles';
 
 const Products: React.FC = () => {
-  const token = localStorage.getItem('igarassu-parafusos:token');
-
   const {
     products,
-    setProducts,
-    actualPage,
-    setActualPage,
     totalPages,
-    setTotalPages,
     totalProducts,
-    setTotalProducts,
+    getProducts,
+    isGetWithFilters,
+    getProductsWithFilters,
+    search,
+    category,
+    type,
   } = useContext(Context);
-
-  const getProducts = useCallback(
-    (page: number) => {
-      api
-        .get('/products', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            page,
-          },
-        })
-        .then(response => {
-          setProducts(response.data.products);
-          setTotalPages(response.data.totalPages);
-          setActualPage(response.data.actualPage);
-          setTotalProducts(response.data.totalProducts);
-        })
-        .catch(error => console.log(error.response.data.message));
-    },
-    [token, setProducts, setActualPage, setTotalPages, setTotalProducts],
-  );
 
   useEffect(() => {
     getProducts(1);
@@ -65,11 +52,26 @@ const Products: React.FC = () => {
           ))}
         </Cards>
       </Content>
-      <Paginator
-        numberOfPages={totalPages}
-        actualPage={actualPage}
-        changePage={getProducts}
-      />
+
+      <ContainerPaginator>
+        <Paginate
+          pageCount={totalPages}
+          pageRangeDisplayed={5}
+          marginPagesDisplayed={2}
+          previousLabel="<"
+          previousLinkClassName="previous-label-paginator"
+          nextLabel=">"
+          nextLinkClassName="next-label-paginator"
+          disabledClassName="disable-paginator"
+          pageClassName="page-paginator"
+          containerClassName="container-paginator"
+          onPageChange={({ selected }) => {
+            isGetWithFilters
+              ? getProductsWithFilters(search, type, category, selected + 1)
+              : getProducts(selected + 1);
+          }}
+        />
+      </ContainerPaginator>
     </Container>
   );
 };

@@ -6,6 +6,8 @@ import React, {
   useCallback,
   useMemo,
 } from 'react';
+import { ToastProps } from '../interfaces';
+import api from '../services/api';
 
 const Context = createContext({
   authenticated: false,
@@ -13,13 +15,25 @@ const Context = createContext({
   token: '',
   handleLogout() {},
   products: [],
-  setProducts(value: React.SetStateAction<never[]>) {},
   totalPages: 0,
-  setTotalPages(value: React.SetStateAction<number>) {},
-  actualPage: 0,
-  setActualPage(value: React.SetStateAction<number>) {},
   totalProducts: 0,
-  setTotalProducts(value: React.SetStateAction<number>) {},
+  getProducts(page: number) {},
+  getProductsWithFilters(
+    search: string,
+    type: string,
+    category: string,
+    page: number,
+  ) {},
+  goBack: false,
+  toggle: true,
+  setToggle(value: React.SetStateAction<boolean>) {},
+  isGetWithFilters: false,
+  search: '',
+  setSearch(value: React.SetStateAction<string>) {},
+  type: '',
+  setType(value: React.SetStateAction<string>) {},
+  category: '',
+  setCategory(value: React.SetStateAction<string>) {},
 });
 
 const AuthProvider: React.FC = ({ children }) => {
@@ -29,6 +43,17 @@ const AuthProvider: React.FC = ({ children }) => {
   const [totalPages, setTotalPages] = useState(0);
   const [actualPage, setActualPage] = useState(0);
   const [totalProducts, setTotalProducts] = useState(0);
+  const [showToast, setShowToast] = useState(false);
+  const [toastInfo, setToastInfo] = useState<ToastProps>({
+    message: '',
+    type: 'error',
+  });
+  const [toggle, setToggle] = useState(true);
+  const [goBack, setGoBack] = useState(false);
+  const [isGetWithFilters, setIsGetWithFilters] = useState(false);
+  const [search, setSearch] = useState('');
+  const [type, setType] = useState('');
+  const [category, setCategory] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -54,6 +79,75 @@ const AuthProvider: React.FC = ({ children }) => {
     localStorage.removeItem('igarassu-parafusos:userId');
   }, []);
 
+  const getProducts = useCallback(
+    (page: number) => {
+      const token = localStorage.getItem('igarassu-parafusos:token');
+      api
+        .get('/products', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            page,
+          },
+        })
+        .then(response => {
+          setProducts(response.data.products);
+          setTotalPages(response.data.totalPages);
+          setActualPage(response.data.actualPage);
+          setTotalProducts(response.data.totalProducts);
+          setIsGetWithFilters(false);
+          setGoBack(false);
+        })
+        .catch(error => console.log(error.response.data.message));
+    },
+    [setProducts, setActualPage, setTotalPages, setTotalProducts],
+  );
+
+  const getProductsWithFilters = useCallback(
+    async (search: string, type: string, category: string, page: number) => {
+      if (!search && !type && !category) {
+        setShowToast(true);
+        setToastInfo({
+          message: 'Você deve preencher ao menos um dos campos',
+          type: 'error',
+        });
+        return;
+      }
+
+      const token = localStorage.getItem('igarassu-parafusos:token');
+
+      try {
+        const Authorization = `Bearer ${token}`;
+        const { data } = await api.get('/products/filter', {
+          headers: {
+            Authorization,
+          },
+          params: {
+            name: toggle ? search : '',
+            type,
+            category,
+            cod: toggle ? '' : search,
+            page,
+          },
+        });
+        setProducts(data.products);
+        setTotalPages(data.totalPages);
+        setActualPage(data.actualPage);
+        setTotalProducts(data.totalProducts);
+        setIsGetWithFilters(true);
+        setGoBack(true);
+      } catch (error) {
+        setShowToast(true);
+        setToastInfo({
+          message: error.response.data.message,
+          type: 'error',
+        });
+      }
+    },
+    [toggle, setProducts, setTotalProducts, setTotalPages, setActualPage],
+  );
+
   const provided = useMemo(
     () => ({
       authenticated,
@@ -61,13 +155,20 @@ const AuthProvider: React.FC = ({ children }) => {
       token,
       handleLogout,
       products,
-      setProducts,
       totalPages,
-      setTotalPages,
-      actualPage,
-      setActualPage,
+      getProducts,
+      getProductsWithFilters,
       totalProducts,
-      setTotalProducts,
+      goBack,
+      toggle,
+      setToggle,
+      isGetWithFilters,
+      search,
+      setSearch,
+      type,
+      setType,
+      category,
+      setCategory,
     }),
     [
       authenticated,
@@ -75,13 +176,20 @@ const AuthProvider: React.FC = ({ children }) => {
       token,
       handleLogout,
       products,
-      setProducts,
       totalPages,
-      setTotalPages,
-      actualPage,
-      setActualPage,
+      getProducts,
+      getProductsWithFilters,
       totalProducts,
-      setTotalProducts,
+      goBack,
+      toggle,
+      setToggle,
+      isGetWithFilters,
+      search,
+      setSearch,
+      type,
+      setType,
+      category,
+      setCategory,
     ],
   );
 
