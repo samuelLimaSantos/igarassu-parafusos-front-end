@@ -8,21 +8,17 @@ import { Context } from '../../context';
 import api from '../../services/api';
 import Loading from '../../components/Loading';
 import Toast from '../../components/Toast';
-
-interface ToastProps {
-  type: 'error' | 'success';
-  message: string;
-}
+import { ToastProps } from '../../interfaces';
 
 const Login: React.FC = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [showToast, setShowToast] = useState(false);
   const [toastInfo, setToastInfo] = useState<ToastProps>({
     message: '',
     type: 'error',
+    showToast: false,
   });
   const { login } = useContext(Context);
   const history = useHistory();
@@ -44,8 +40,8 @@ const Login: React.FC = () => {
         setToastInfo({
           message: error.response.data.message,
           type: 'error',
+          showToast: true,
         });
-        setShowToast(true);
       }
     },
     [name, password, login, history],
@@ -54,11 +50,11 @@ const Login: React.FC = () => {
   return (
     <Container>
       {isLoading && <Loading />}
-      {showToast && (
+      {toastInfo.showToast && (
         <Toast
-          type={toastInfo.type}
+          setShowToast={setToastInfo}
           message={toastInfo.message}
-          setShowToast={setShowToast}
+          type={toastInfo.type}
         />
       )}
 
@@ -121,7 +117,6 @@ const Login: React.FC = () => {
               </article>
             </fieldset>
           </form>
-          {/* <a href="/">Esqueceu a senha? Clique aqui</a> */}
         </RightSide>
       </Content>
     </Container>

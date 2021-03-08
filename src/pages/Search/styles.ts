@@ -55,15 +55,6 @@ export const Advisor = styled.div`
   align-self: flex-end;
 `;
 
-export const Cards = styled.div`
-  width: 90%;
-  margin: 0 auto;
-  max-width: 1300px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
-`;
-
 export const ContainerPaginator = styled.div`
   width: 100%;
   margin-top: 60px;
@@ -116,5 +107,34 @@ export const ContainerPaginator = styled.div`
     .next-label-paginator:hover {
       color: var(--primary);
     }
+  }
+`;
+
+export const BreadCrumb = styled.div`
+  margin: 0 auto;
+  max-width: 1200px;
+
+  font-size: 24px;
+  margin-top: 24px;
+
+  a {
+    color: var(--dark);
+    text-decoration: none;
+  }
+
+  span {
+    width: 100px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    svg {
+      margin-right: 6px;
+    }
+
+    transition: color 0.1s;
+  }
+
+  span:hover {
+    color: var(--primary);
   }
 `;

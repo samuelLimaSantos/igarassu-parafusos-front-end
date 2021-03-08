@@ -1,4 +1,6 @@
-/* eslint-disable camelcase */
+export interface IProductsArray {
+  products: IProduct[];
+}
 
 export interface IProduct {
   id: string;
@@ -24,6 +26,7 @@ export interface ICategory {
 export interface ToastProps {
   message: string;
   type: 'error' | 'success';
+  showToast: boolean;
 }
 
 export interface Categories {

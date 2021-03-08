@@ -18,30 +18,20 @@ import {
   Search,
   Filters,
   Divider,
-  BreadCrumb,
 } from './styles';
 
 const Header: React.FC = () => {
-  const [showToast, setShowToast] = useState(false);
+  const [categories, setCategories] = useState<Categories[]>([]);
+  const [toggle, setToggle] = useState(false);
+  const [type, setType] = useState('');
+  const [category, setCategory] = useState('');
+  const [search, setSearch] = useState('');
+  const { handleLogout } = useContext(Context);
   const [toastInfo, setToastInfo] = useState<ToastProps>({
     message: '',
     type: 'error',
+    showToast: false,
   });
-  const [categories, setCategories] = useState<Categories[]>([]);
-  const {
-    handleLogout,
-    getProducts,
-    getProductsWithFilters,
-    goBack,
-    toggle,
-    setToggle,
-    type,
-    setType,
-    search,
-    setSearch,
-    category,
-    setCategory,
-  } = useContext(Context);
   const history = useHistory();
   const token = localStorage.getItem('igarassu-parafusos:token');
 
@@ -53,7 +43,13 @@ const Header: React.FC = () => {
         },
       })
       .then(response => setCategories(response.data))
-      .catch(error => console.log(error));
+      .catch(error => {
+        setToastInfo({
+          message: error.response.data.message,
+          type: 'error',
+          showToast: true,
+        });
+      });
   }, [token]);
 
   const handleAppLogout = useCallback(() => {
@@ -62,12 +58,28 @@ const Header: React.FC = () => {
     history.push('/');
   }, [handleLogout, history]);
 
+  const handleRedirectToSearch = useCallback(() => {
+    if (!search && !type && !category) {
+      setToastInfo({
+        message: 'Você deve preencher ao menos um dos campos de pesquisa',
+        type: 'error',
+        showToast: true,
+      });
+      return;
+    }
+
+    history.push({
+      pathname: '/search',
+      search: `search=${search}&type=${type}&category=${category}&toggle=${toggle}`,
+    });
+  }, [category, history, type, search, toggle]);
+
   return (
     <>
       <Container>
-        {showToast && (
+        {toastInfo.showToast && (
           <Toast
-            setShowToast={setShowToast}
+            setShowToast={setToastInfo}
             message={toastInfo.message}
             type={toastInfo.type}
           />
@@ -80,9 +92,7 @@ const Header: React.FC = () => {
                 color="#9A9595"
                 size={24}
                 cursor="pointer"
-                onClick={() => {
-                  getProductsWithFilters(search, type, category, 1);
-                }}
+                onClick={handleRedirectToSearch}
               />
               <input
                 type="text"
@@ -162,21 +172,6 @@ const Header: React.FC = () => {
           </RightSide>
         </Content>
       </Container>
-      {goBack && (
-        <BreadCrumb
-          onClick={() => {
-            getProducts(1);
-            setSearch('');
-            setType('');
-            setCategory('');
-          }}
-        >
-          <span>
-            <FiChevronLeft size={32} />
-            <span>Voltar</span>
-          </span>
-        </BreadCrumb>
-      )}
     </>
   );
 };

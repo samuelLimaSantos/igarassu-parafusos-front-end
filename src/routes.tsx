@@ -2,6 +2,8 @@ import React from 'react';
 import { Route, Switch, BrowserRouter, Redirect } from 'react-router-dom';
 import Login from './pages/Login';
 import Products from './pages/Products';
+import { RegisterProduct } from './pages/RegisterProduct';
+import { Search } from './pages/Search';
 
 const Routes: React.FC = () => {
   function PrivateRoute({ isPrivate, ...rest }: any) {
@@ -20,6 +22,12 @@ const Routes: React.FC = () => {
       <Switch>
         <Route exact path="/" component={Login} />
         <PrivateRoute path="/products" component={Products} isPrivate />
+        <PrivateRoute
+          path="/registerProduct"
+          component={RegisterProduct}
+          isPrivate
+        />
+        <PrivateRoute path="/search" component={Search} isPrivate />
       </Switch>
     </BrowserRouter>
   );

@@ -3,20 +3,24 @@ import { Dispatch, SetStateAction, useEffect } from 'react';
 import { FiAlertCircle, FiCheckCircle, FiXCircle } from 'react-icons/fi';
 import { Container, Content, Bar } from './style';
 
-interface ToastProps {
-  type: 'error' | 'success';
+interface ToastPropsLocal {
+  type: string;
   message: string;
-  setShowToast: Dispatch<SetStateAction<boolean>>;
+  setShowToast: Dispatch<SetStateAction<any>>;
 }
 
-const Toast: React.FC<ToastProps> = ({
+const Toast: React.FC<ToastPropsLocal> = ({
   type,
   message,
   setShowToast,
-}: ToastProps) => {
+}: ToastPropsLocal) => {
   useEffect(() => {
     const timeOut = setTimeout(() => {
-      setShowToast(false);
+      setShowToast({
+        message: '',
+        type: '',
+        showToast: false,
+      });
     }, 2990);
 
     return () => {
@@ -39,7 +43,13 @@ const Toast: React.FC<ToastProps> = ({
             style={{
               cursor: 'pointer',
             }}
-            onClick={() => setShowToast(false)}
+            onClick={() => {
+              setShowToast({
+                message: '',
+                type: '',
+                showToast: false,
+              });
+            }}
             size={20}
           />
         </div>

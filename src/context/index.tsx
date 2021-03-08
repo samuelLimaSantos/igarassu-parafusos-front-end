@@ -44,10 +44,10 @@ const AuthProvider: React.FC = ({ children }) => {
   const [actualPage, setActualPage] = useState(0);
   const [totalProducts, setTotalProducts] = useState(0);
   const [showToast, setShowToast] = useState(false);
-  const [toastInfo, setToastInfo] = useState<ToastProps>({
-    message: '',
-    type: 'error',
-  });
+  // const [toastInfo, setToastInfo] = useState<ToastProps>({
+  //   message: '',
+  //   type: 'error',
+  // });
   const [toggle, setToggle] = useState(true);
   const [goBack, setGoBack] = useState(false);
   const [isGetWithFilters, setIsGetWithFilters] = useState(false);
@@ -107,12 +107,12 @@ const AuthProvider: React.FC = ({ children }) => {
   const getProductsWithFilters = useCallback(
     async (search: string, type: string, category: string, page: number) => {
       if (!search && !type && !category) {
-        setShowToast(true);
-        setToastInfo({
-          message: 'Você deve preencher ao menos um dos campos',
-          type: 'error',
-        });
-        return;
+        // setShowToast(true);
+        // setToastInfo({
+        //   message: 'Você deve preencher ao menos um dos campos',
+        //   type: 'error',
+        // });
+        // return;
       }
 
       const token = localStorage.getItem('igarassu-parafusos:token');
@@ -138,11 +138,11 @@ const AuthProvider: React.FC = ({ children }) => {
         setIsGetWithFilters(true);
         setGoBack(true);
       } catch (error) {
-        setShowToast(true);
-        setToastInfo({
-          message: error.response.data.message,
-          type: 'error',
-        });
+        // setShowToast(true);
+        // setToastInfo({
+        //   message: error.response.data.message,
+        //   type: 'error',
+        // });
       }
     },
     [toggle, setProducts, setTotalProducts, setTotalPages, setActualPage],

@@ -1,65 +1,91 @@
-import React, { useEffect, useContext, useState, useCallback } from 'react';
+import React, { useEffect, useContext, useCallback, useState } from 'react';
+import { useLocation, Link } from 'react-router-dom';
 import Paginate from 'react-paginate';
-import { Link } from 'react-router-dom';
-import Card from '../../components/Card';
+import { FiChevronLeft } from 'react-icons/fi';
 import Header from '../../components/Header';
-import { IProduct, ToastProps } from '../../interfaces';
 import { ProductsComponent } from '../../components/ProductsComponent';
 import { Context } from '../../context';
 import api from '../../services/api';
-import Loading from '../../components/Loading';
 import {
+  ContainerPaginator,
   Container,
   Content,
-  NewProduct,
   Advisor,
+  NewProduct,
   Top,
-  ContainerPaginator,
+  BreadCrumb,
 } from './styles';
+import Loading from '../../components/Loading';
+import { ToastProps } from '../../interfaces';
 import Toast from '../../components/Toast';
 
-const Products: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(false);
+const Search: React.FC = () => {
   const [products, setProducts] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [totalProducts, setTotalProducts] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const [toastInfo, setToastInfo] = useState<ToastProps>({
     message: '',
     type: 'error',
     showToast: false,
   });
 
-  const handleGetProducts = useCallback((page: number) => {
-    const token = localStorage.getItem('igarassu-parafusos:token');
-    setIsLoading(true);
-    api
-      .get('/products', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          page,
-        },
-      })
-      .then(response => {
-        setProducts(response.data.products);
-        setTotalPages(response.data.totalPages);
-        setTotalProducts(response.data.totalProducts);
+  const { search } = useLocation();
+  const getWithFilters = useCallback(
+    async (page: number) => {
+      const [searchName, type, category, toggle] = search
+        .replace('?', '')
+        .replace('search', '')
+        .replace('category', '')
+        .replace('type', '')
+        .replace('toggle', '')
+        .replaceAll('=', '')
+        .split('&');
+      // console.log(
+      //   'search -> ',
+      //   searchName,
+      //   'type->',
+      //   type,
+      //   'category -> ',
+      //   category,
+      // );
+
+      const token = localStorage.getItem('igarassu-parafusos:token');
+
+      try {
+        const Authorization = `Bearer ${token}`;
+        setIsLoading(true);
+        const { data } = await api.get('/products/filter', {
+          headers: {
+            Authorization,
+          },
+          params: {
+            name: toggle === 'true' ? searchName : '',
+            type,
+            category,
+            cod: toggle === 'true' ? '' : searchName,
+            page,
+          },
+        });
+        setProducts(data.products);
+        setTotalPages(data.totalPages);
+        setTotalProducts(data.totalProducts);
         setIsLoading(false);
-      })
-      .catch(error => {
+      } catch (error) {
         setIsLoading(false);
         setToastInfo({
           message: error.response.data.message,
           type: 'error',
           showToast: true,
         });
-      });
-  }, []);
+      }
+    },
+    [search],
+  );
 
   useEffect(() => {
-    handleGetProducts(1);
-  }, [handleGetProducts]);
+    getWithFilters(1);
+  }, [getWithFilters]);
 
   return (
     <Container>
@@ -71,7 +97,16 @@ const Products: React.FC = () => {
           type={toastInfo.type}
         />
       )}
+
       <Header />
+      <BreadCrumb>
+        <Link to="/products">
+          <span>
+            <FiChevronLeft size={32} />
+            <span>Voltar</span>
+          </span>
+        </Link>
+      </BreadCrumb>
       <Content>
         <Top>
           <Advisor>
@@ -85,7 +120,6 @@ const Products: React.FC = () => {
         </Top>
         <ProductsComponent products={products} />
       </Content>
-
       <ContainerPaginator>
         <Paginate
           pageCount={totalPages}
@@ -99,7 +133,7 @@ const Products: React.FC = () => {
           pageClassName="page-paginator"
           containerClassName="container-paginator"
           onPageChange={({ selected }) => {
-            handleGetProducts(selected + 1);
+            getWithFilters(selected + 1);
           }}
         />
       </ContainerPaginator>
@@ -107,4 +141,4 @@ const Products: React.FC = () => {
   );
 };
 
-export default Products;
+export { Search };
