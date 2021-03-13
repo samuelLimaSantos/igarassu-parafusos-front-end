@@ -12,3 +12,11 @@
   [] - Variáveis não utilizadas
   [] - Estilos não utilizados
 [] - Enxugar o contexto
+[] - TolocaleString no card
+
+  Container,
+  Content,
+  NewProduct,
+  Advisor,
+  Top,
+  ContainerPaginator

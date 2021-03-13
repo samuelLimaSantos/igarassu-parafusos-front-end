@@ -1,6 +1,6 @@
 import { useState, useCallback, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { FiSearch, FiXCircle, FiLogOut, FiChevronLeft } from 'react-icons/fi';
+import { FiSearch, FiXCircle, FiLogOut } from 'react-icons/fi';
 import logo from '../../assets/logo.svg';
 import nameIcon from '../../assets/name-icon.svg';
 import codeIcon from '../../assets/code-icon.svg';

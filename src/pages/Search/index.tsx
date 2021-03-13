@@ -1,10 +1,9 @@
-import React, { useEffect, useContext, useCallback, useState } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import Paginate from 'react-paginate';
 import { FiChevronLeft } from 'react-icons/fi';
 import Header from '../../components/Header';
 import { ProductsComponent } from '../../components/ProductsComponent';
-import { Context } from '../../context';
 import api from '../../services/api';
 import {
   ContainerPaginator,
@@ -41,14 +40,6 @@ const Search: React.FC = () => {
         .replace('toggle', '')
         .replaceAll('=', '')
         .split('&');
-      // console.log(
-      //   'search -> ',
-      //   searchName,
-      //   'type->',
-      //   type,
-      //   'category -> ',
-      //   category,
-      // );
 
       const token = localStorage.getItem('igarassu-parafusos:token');
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Dispatch, SetStateAction, useEffect } from 'react';
 
 import { FiAlertCircle, FiCheckCircle, FiXCircle } from 'react-icons/fi';

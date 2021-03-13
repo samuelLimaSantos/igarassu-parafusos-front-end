@@ -1,6 +1,4 @@
-import { useContext, useEffect } from 'react';
 import Header from '../../components/Header';
-import { Context } from '../../context';
 
 const RegisterProduct: React.FC = () => {
   return (

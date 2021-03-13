@@ -1,11 +1,9 @@
-import React, { useEffect, useContext, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Paginate from 'react-paginate';
 import { Link } from 'react-router-dom';
-import Card from '../../components/Card';
 import Header from '../../components/Header';
-import { IProduct, ToastProps } from '../../interfaces';
+import { ToastProps } from '../../interfaces';
 import { ProductsComponent } from '../../components/ProductsComponent';
-import { Context } from '../../context';
 import api from '../../services/api';
 import Loading from '../../components/Loading';
 import {
