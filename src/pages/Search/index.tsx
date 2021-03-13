@@ -1,7 +1,6 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import Paginate from 'react-paginate';
-import { FiChevronLeft } from 'react-icons/fi';
 import Header from '../../components/Header';
 import { ProductsComponent } from '../../components/ProductsComponent';
 import api from '../../services/api';
@@ -12,11 +11,11 @@ import {
   Advisor,
   NewProduct,
   Top,
-  BreadCrumb,
 } from './styles';
 import Loading from '../../components/Loading';
 import { ToastProps } from '../../interfaces';
 import Toast from '../../components/Toast';
+import { BreadCrumb } from '../../components/BreadCrumb';
 
 const Search: React.FC = () => {
   const [products, setProducts] = useState([]);
@@ -90,14 +89,7 @@ const Search: React.FC = () => {
       )}
 
       <Header />
-      <BreadCrumb>
-        <Link to="/products">
-          <span>
-            <FiChevronLeft size={32} />
-            <span>Voltar</span>
-          </span>
-        </Link>
-      </BreadCrumb>
+      <BreadCrumb />
       <Content>
         <Top>
           <Advisor>

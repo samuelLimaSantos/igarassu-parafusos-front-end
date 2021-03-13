@@ -8,15 +8,8 @@
 [x] - Fazer a lógica de pesquisa
 [x] - Isolar a requisição de produtos em um hook
 [x] - Estilizar o breadcrumb de voltar para pesquisa geral
-[] - Limpar todo o projeto
-  [] - Variáveis não utilizadas
-  [] - Estilos não utilizados
-[] - Enxugar o contexto
-[] - TolocaleString no card
-
-  Container,
-  Content,
-  NewProduct,
-  Advisor,
-  Top,
-  ContainerPaginator
+[x] - Limpar todo o projeto
+  [x] - Variáveis não utilizadas
+  [x] - Estilos não utilizados
+[x] - Enxugar o contexto
+[] - Criação da página de cadastrar novo produto
