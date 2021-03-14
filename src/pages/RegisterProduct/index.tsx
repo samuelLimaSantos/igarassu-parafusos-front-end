@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import { useState, useCallback, useEffect, useMemo, FormEvent } from 'react';
-import { useHistory } from 'react-router-dom';
 import Paginate from 'react-paginate';
 import Loading from '../../components/Loading';
 import Toast from '../../components/Toast';
@@ -12,6 +11,7 @@ import keyImage from '../../assets/key.svg';
 import measuringImage from '../../assets/measuring-tool.svg';
 import screwImage from '../../assets/screw.svg';
 import toolImage from '../../assets/tool.svg';
+import logoImage from '../../assets/logo.svg';
 import constructionToolsImage from '../../assets/construction-tools.svg';
 import { Categories, ToastProps } from '../../interfaces';
 import api from '../../services/api';
@@ -23,6 +23,7 @@ import {
   SecondStep,
   ThirdStep,
   FourthStep,
+  FinalStep,
 } from './styles';
 import { maskMoney } from '../../utils/maskMoney';
 
@@ -154,6 +155,7 @@ const RegisterProduct: React.FC = () => {
             redirectPath: '/products',
           });
           setIsLoading(false);
+          setStep(5);
         })
         .catch(error => {
           setToastInfo({
@@ -406,7 +408,6 @@ const RegisterProduct: React.FC = () => {
 
                   <div className="container-input">
                     <label htmlFor="price_sell">Preço de venda</label>
-
                     <input
                       id="price_sell"
                       value={priceSell}
@@ -424,24 +425,35 @@ const RegisterProduct: React.FC = () => {
                 </section>
               </FourthStep>
             )}
+
+            {step === 5 && (
+              <FinalStep>
+                <h3>Produto cadastrado com sucesso :)</h3>
+                <div className="container-image">
+                  <img src={logoImage} alt="Logo" />
+                </div>
+              </FinalStep>
+            )}
           </fieldset>
-          <ContainerPaginator>
-            <Paginate
-              pageCount={pageStepCount}
-              pageRangeDisplayed={5}
-              marginPagesDisplayed={2}
-              previousLabel="Passo anterior"
-              previousLinkClassName="previous-label-paginator"
-              nextLabel="Próximo passo"
-              nextLinkClassName="next-label-paginator"
-              disabledClassName="disable-paginator"
-              pageClassName="page-paginator"
-              containerClassName="container-paginator"
-              onPageChange={({ selected }) => {
-                setStep(selected + 1);
-              }}
-            />
-          </ContainerPaginator>
+          {step !== 5 && (
+            <ContainerPaginator>
+              <Paginate
+                pageCount={pageStepCount}
+                pageRangeDisplayed={5}
+                marginPagesDisplayed={2}
+                previousLabel="Passo anterior"
+                previousLinkClassName="previous-label-paginator"
+                nextLabel="Próximo passo"
+                nextLinkClassName="next-label-paginator"
+                disabledClassName="disable-paginator"
+                pageClassName="page-paginator"
+                containerClassName="container-paginator"
+                onPageChange={({ selected }) => {
+                  setStep(selected + 1);
+                }}
+              />
+            </ContainerPaginator>
+          )}
         </Form>
       </Content>
     </>

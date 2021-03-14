@@ -295,6 +295,23 @@ export const FourthStep = styled.div`
   }
 `;
 
+export const FinalStep = styled.div`
+  h3 {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .container-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 250px;
+    }
+  }
+`;
+
 export const ContainerPaginator = styled.div`
   width: 100%;
   margin-top: 60px;
