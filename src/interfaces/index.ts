@@ -27,6 +27,7 @@ export interface ToastProps {
   message: string;
   type: 'error' | 'success';
   showToast: boolean;
+  redirectPath?: string;
 }
 
 export interface Categories {

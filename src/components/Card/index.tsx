@@ -27,10 +27,10 @@ const Card: React.FC<IProduct> = (product: IProduct) => {
       <Footer className="footer">
         <section className="mini-cards">
           <p style={{ backgroundColor: 'rgba(14, 102, 168, 0.1)' }}>
-            {product.category_id.title}
+            {product.category_id.title.substr(0, 15)}
           </p>
           <p style={{ backgroundColor: 'rgba(250, 177, 10, 0.1)' }}>
-            {product.type}
+            {product.type.substr(0, 15)}
           </p>
           <p style={{ backgroundColor: 'rgba(242, 146, 146, 0.2)' }}>
             {product.quantity} {product.unity}

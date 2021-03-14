@@ -12,4 +12,6 @@
   [x] - Variáveis não utilizadas
   [x] - Estilos não utilizados
 [x] - Enxugar o contexto
-[] - Criação da página de cadastrar novo produto
+[] - Criação da página de cadastrar novo produtos
+  [] - Criar progress bar
+  [x] - Verificar os max length dos campos com base dos dados no banco
