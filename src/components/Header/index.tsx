@@ -8,8 +8,7 @@ import typeIcon from '../../assets/type-icon.svg';
 import categoryIcon from '../../assets/category-icon.svg';
 import api from '../../services/api';
 import { Context } from '../../context';
-import Toast from '../Toast';
-import { Categories, ToastProps } from '../../interfaces';
+import { Categories } from '../../interfaces';
 import {
   Container,
   Content,
@@ -26,12 +25,8 @@ const Header: React.FC = () => {
   const [type, setType] = useState('');
   const [category, setCategory] = useState('');
   const [search, setSearch] = useState('');
-  const { handleLogout } = useContext(Context);
-  const [toastInfo, setToastInfo] = useState<ToastProps>({
-    message: '',
-    type: 'error',
-    showToast: false,
-  });
+  const { handleLogout, setToastInfo } = useContext(Context);
+
   const history = useHistory();
   const token = localStorage.getItem('igarassu-parafusos:token');
 
@@ -50,7 +45,7 @@ const Header: React.FC = () => {
           showToast: true,
         });
       });
-  }, [token]);
+  }, [token, setToastInfo]);
 
   const handleAppLogout = useCallback(() => {
     handleLogout();
@@ -72,19 +67,11 @@ const Header: React.FC = () => {
       pathname: '/search',
       search: `search=${search}&type=${type}&category=${category}&toggle=${toggle}`,
     });
-  }, [category, history, type, search, toggle]);
+  }, [category, history, type, search, toggle, setToastInfo]);
 
   return (
     <>
       <Container>
-        {toastInfo.showToast && (
-          <Toast
-            setShowToast={setToastInfo}
-            message={toastInfo.message}
-            type={toastInfo.type}
-          />
-        )}
-
         <Content>
           <LeftSide>
             <Search>

@@ -7,20 +7,13 @@ import loginImage from '../../assets/login-image.svg';
 import { Context } from '../../context';
 import api from '../../services/api';
 import Loading from '../../components/Loading';
-import Toast from '../../components/Toast';
-import { ToastProps } from '../../interfaces';
 
 const Login: React.FC = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [toastInfo, setToastInfo] = useState<ToastProps>({
-    message: '',
-    type: 'error',
-    showToast: false,
-  });
-  const { login } = useContext(Context);
+  const { login, setToastInfo } = useContext(Context);
   const history = useHistory();
 
   const handleLogin = useCallback(
@@ -44,19 +37,12 @@ const Login: React.FC = () => {
         });
       }
     },
-    [name, password, login, history],
+    [name, password, login, history, setToastInfo],
   );
 
   return (
     <Container>
       {isLoading && <Loading />}
-      {toastInfo.showToast && (
-        <Toast
-          setShowToast={setToastInfo}
-          message={toastInfo.message}
-          type={toastInfo.type}
-        />
-      )}
 
       <Content>
         <LeftSide>

@@ -1,9 +1,12 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback, useState, useContext } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import Paginate from 'react-paginate';
 import Header from '../../components/Header';
 import { ProductsComponent } from '../../components/ProductsComponent';
 import api from '../../services/api';
+import Loading from '../../components/Loading';
+import { BreadCrumb } from '../../components/BreadCrumb';
+import { Context } from '../../context';
 import {
   ContainerPaginator,
   Container,
@@ -12,21 +15,14 @@ import {
   NewProduct,
   Top,
 } from './styles';
-import Loading from '../../components/Loading';
-import { ToastProps } from '../../interfaces';
-import Toast from '../../components/Toast';
-import { BreadCrumb } from '../../components/BreadCrumb';
 
 const Search: React.FC = () => {
   const [products, setProducts] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [totalProducts, setTotalProducts] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [toastInfo, setToastInfo] = useState<ToastProps>({
-    message: '',
-    type: 'error',
-    showToast: false,
-  });
+
+  const { setToastInfo } = useContext(Context);
 
   const { search } = useLocation();
   const getWithFilters = useCallback(
@@ -70,7 +66,7 @@ const Search: React.FC = () => {
         });
       }
     },
-    [search],
+    [search, setToastInfo],
   );
 
   useEffect(() => {
@@ -80,13 +76,6 @@ const Search: React.FC = () => {
   return (
     <Container>
       {isLoading && <Loading />}
-      {toastInfo.showToast && (
-        <Toast
-          setShowToast={setToastInfo}
-          message={toastInfo.message}
-          type={toastInfo.type}
-        />
-      )}
 
       <Header />
       <BreadCrumb />

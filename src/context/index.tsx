@@ -6,17 +6,25 @@ import React, {
   useCallback,
   useMemo,
 } from 'react';
+import Toast from '../components/Toast';
+import { ToastProps } from '../interfaces';
 
 const Context = createContext({
   authenticated: false,
   login(token: string, userId: string) {},
   token: '',
   handleLogout() {},
+  setToastInfo(value: React.SetStateAction<ToastProps>) {},
 });
 
 const AuthProvider: React.FC = ({ children }) => {
   const [authenticated, setAuthenticated] = useState(false);
   const [token, setToken] = useState('');
+  const [toastInfo, setToastInfo] = useState<ToastProps>({
+    message: '',
+    type: 'error',
+    showToast: false,
+  });
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -48,11 +56,25 @@ const AuthProvider: React.FC = ({ children }) => {
       login,
       token,
       handleLogout,
+      setToastInfo,
     }),
-    [authenticated, login, token, handleLogout],
+    [authenticated, login, token, handleLogout, setToastInfo],
   );
 
-  return <Context.Provider value={provided}>{children}</Context.Provider>;
+  return (
+    <Context.Provider value={provided}>
+      <>
+        {toastInfo.showToast && (
+          <Toast
+            setShowToast={setToastInfo}
+            message={toastInfo.message}
+            type={toastInfo.type}
+          />
+        )}
+        {children}
+      </>
+    </Context.Provider>
+  );
 };
 
 export { Context, AuthProvider };

@@ -76,18 +76,20 @@ export const Footer = styled.section`
   }
 
   button {
-    border-radius: 50px;
-    background-color: var(--primary);
-    color: #fff;
+    border-radius: 3px;
+    color: var(--primary);
+    border: 2px solid var(--primary);
     height: 40px;
     border: none;
-    width: 160px;
+    width: 130px;
     cursor: pointer;
     font-size: 16px;
-    transition: opacity 0.6s;
+    transition: background-color color 0.6s;
+    outline: none;
   }
 
   button:hover {
-    opacity: 0.8;
+    background-color: var(--primary);
+    color: #fff;
   }
 `;

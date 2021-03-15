@@ -16,7 +16,7 @@
   [x] - Criar progress bar
   [x] - Verificar os max length dos campos com base dos dados no banco
   [x] - Criar o step de sucesso
-[] - Criar modal de atualizar estoque
+[x] - Criar modal de atualizar estoque
 [] - Criar página de detalhes de produto
 [] - Criar página de atualização de dados do produto
 [] - Criar página de histórico de transações

@@ -38,7 +38,7 @@ const Card: React.FC<IProduct> = (product: IProduct) => {
           </p>
         </section>
 
-        <button type="button">Atualizar estoque</button>
+        <button type="button">Ver detalhes</button>
       </Footer>
     </Container>
   );

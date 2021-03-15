@@ -1,8 +1,15 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import { useState, useCallback, useEffect, useMemo, FormEvent } from 'react';
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useMemo,
+  FormEvent,
+  useContext,
+} from 'react';
+import { useHistory } from 'react-router-dom';
 import Paginate from 'react-paginate';
 import Loading from '../../components/Loading';
-import Toast from '../../components/Toast';
 import { BreadCrumb } from '../../components/BreadCrumb';
 import Header from '../../components/Header';
 import drillImage from '../../assets/drill.svg';
@@ -11,10 +18,10 @@ import keyImage from '../../assets/key.svg';
 import measuringImage from '../../assets/measuring-tool.svg';
 import screwImage from '../../assets/screw.svg';
 import toolImage from '../../assets/tool.svg';
-import logoImage from '../../assets/logo.svg';
 import constructionToolsImage from '../../assets/construction-tools.svg';
-import { Categories, ToastProps } from '../../interfaces';
+import { Categories } from '../../interfaces';
 import api from '../../services/api';
+import { Context } from '../../context';
 import {
   ContainerPaginator,
   Content,
@@ -23,7 +30,6 @@ import {
   SecondStep,
   ThirdStep,
   FourthStep,
-  FinalStep,
 } from './styles';
 import { maskMoney } from '../../utils/maskMoney';
 
@@ -44,12 +50,10 @@ const RegisterProduct: React.FC = () => {
   const [quantity, setQuantity] = useState(1);
   const [canSubmit, setCanSubmit] = useState(false);
 
-  const [toastInfo, setToastInfo] = useState<ToastProps>({
-    message: '',
-    type: 'error',
-    showToast: false,
-    redirectPath: '/registerProduct',
-  });
+  const { setToastInfo } = useContext(Context);
+
+  const history = useHistory();
+
   const token = localStorage.getItem('igarassu-parafusos:token');
 
   useMemo(() => {
@@ -122,7 +126,7 @@ const RegisterProduct: React.FC = () => {
         });
         setIsLoading(false);
       });
-  }, [token]);
+  }, [token, setToastInfo]);
 
   const handleSubmit = useCallback(
     (event: FormEvent) => {
@@ -152,10 +156,9 @@ const RegisterProduct: React.FC = () => {
             message: 'Produto cadastrado com sucesso!',
             type: 'success',
             showToast: true,
-            redirectPath: '/products',
           });
           setIsLoading(false);
-          setStep(5);
+          history.push('/products');
         })
         .catch(error => {
           setToastInfo({
@@ -179,20 +182,15 @@ const RegisterProduct: React.FC = () => {
       quantity,
       token,
       unity,
+      setToastInfo,
+      history,
     ],
   );
 
   return (
     <>
       {isLoading && <Loading />}
-      {toastInfo.showToast && (
-        <Toast
-          setShowToast={setToastInfo}
-          message={toastInfo.message}
-          type={toastInfo.type}
-          redirectPath={toastInfo.redirectPath}
-        />
-      )}
+
       <Header />
       <BreadCrumb />
       <Content>
@@ -425,35 +423,25 @@ const RegisterProduct: React.FC = () => {
                 </section>
               </FourthStep>
             )}
-
-            {step === 5 && (
-              <FinalStep>
-                <h3>Produto cadastrado com sucesso :)</h3>
-                <div className="container-image">
-                  <img src={logoImage} alt="Logo" />
-                </div>
-              </FinalStep>
-            )}
           </fieldset>
-          {step !== 5 && (
-            <ContainerPaginator>
-              <Paginate
-                pageCount={pageStepCount}
-                pageRangeDisplayed={5}
-                marginPagesDisplayed={2}
-                previousLabel="Passo anterior"
-                previousLinkClassName="previous-label-paginator"
-                nextLabel="Próximo passo"
-                nextLinkClassName="next-label-paginator"
-                disabledClassName="disable-paginator"
-                pageClassName="page-paginator"
-                containerClassName="container-paginator"
-                onPageChange={({ selected }) => {
-                  setStep(selected + 1);
-                }}
-              />
-            </ContainerPaginator>
-          )}
+
+          <ContainerPaginator>
+            <Paginate
+              pageCount={pageStepCount}
+              pageRangeDisplayed={5}
+              marginPagesDisplayed={2}
+              previousLabel="Passo anterior"
+              previousLinkClassName="previous-label-paginator"
+              nextLabel="Próximo passo"
+              nextLinkClassName="next-label-paginator"
+              disabledClassName="disable-paginator"
+              pageClassName="page-paginator"
+              containerClassName="container-paginator"
+              onPageChange={({ selected }) => {
+                setStep(selected + 1);
+              }}
+            />
+          </ContainerPaginator>
         </Form>
       </Content>
     </>

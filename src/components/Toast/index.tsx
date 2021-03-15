@@ -19,7 +19,7 @@ const Toast: React.FC<ToastPropsLocal> = ({
   setShowToast,
   redirectPath,
 }: ToastPropsLocal) => {
-  const { push } = useHistory();
+  const history = useHistory();
 
   useEffect(() => {
     const timeOut = setTimeout(() => {
@@ -29,14 +29,14 @@ const Toast: React.FC<ToastPropsLocal> = ({
         showToast: false,
       });
 
-      redirectPath && push(redirectPath);
+      redirectPath && history.push(redirectPath);
     }, 2990);
 
     return () => {
       clearTimeout(timeOut);
-      redirectPath && push(redirectPath);
+      redirectPath && history.push(redirectPath);
     };
-  }, [setShowToast, push, redirectPath]);
+  }, [setShowToast, history, redirectPath]);
 
   return (
     <Container>
