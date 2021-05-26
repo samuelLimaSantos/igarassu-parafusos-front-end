@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Switch, BrowserRouter, Redirect } from 'react-router-dom';
 import Login from './pages/Login';
+import { ProductDetail } from './pages/ProductDetail';
 import Products from './pages/Products';
 import { RegisterProduct } from './pages/RegisterProduct';
 import { Search } from './pages/Search';
@@ -28,6 +29,7 @@ const Routes: React.FC = () => {
           isPrivate
         />
         <PrivateRoute path="/search" component={Search} isPrivate />
+        <PrivateRoute path="/product" component={ProductDetail} isPrivate />
       </Switch>
     </BrowserRouter>
   );

@@ -17,8 +17,11 @@
   [x] - Verificar os max length dos campos com base dos dados no banco
   [x] - Criar o step de sucesso
 [x] - Criar modal de atualizar estoque
+[] - Ajustar os cursors
 [] - Criar página de detalhes de produto
 [] - Criar página de atualização de dados do produto
 [] - Criar página de histórico de transações
+[] - Criar um footer com créditos de desenvolvimento
+[] - Criar o icon da tab
 
 

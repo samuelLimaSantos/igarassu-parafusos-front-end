@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { IProduct } from '../../interfaces';
 import { Container, Header, Description, Footer } from './styles';
 import { parseImage } from '../../utils/parseImage';
 
 const Card: React.FC<IProduct> = (product: IProduct) => {
   const [image] = useState(parseImage(product.image_id));
+  const history = useHistory();
 
   return (
     <Container>
@@ -27,7 +29,7 @@ const Card: React.FC<IProduct> = (product: IProduct) => {
       <Footer className="footer">
         <section className="mini-cards">
           <p style={{ backgroundColor: 'rgba(14, 102, 168, 0.1)' }}>
-            {product.category_id.title.substr(0, 15)}
+            {product.category_id.title.substr(0, 13)}
           </p>
           <p style={{ backgroundColor: 'rgba(250, 177, 10, 0.1)' }}>
             {product.type.substr(0, 15)}
@@ -38,7 +40,16 @@ const Card: React.FC<IProduct> = (product: IProduct) => {
           </p>
         </section>
 
-        <button type="button">Ver detalhes</button>
+        <button
+          type="button"
+          onClick={() => {
+            history.push(`/product/${product.id}`, {
+              id: product.id,
+            });
+          }}
+        >
+          Ver detalhes
+        </button>
       </Footer>
     </Container>
   );

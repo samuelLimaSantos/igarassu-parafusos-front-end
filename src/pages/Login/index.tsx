@@ -21,7 +21,7 @@ const Login: React.FC = () => {
       event.preventDefault();
       try {
         setIsLoading(true);
-        const { data } = await api.post('/sessions', {
+        const { data } = await api.post('/session', {
           login: name,
           password,
         });

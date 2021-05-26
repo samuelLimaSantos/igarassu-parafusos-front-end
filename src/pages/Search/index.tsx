@@ -41,7 +41,7 @@ const Search: React.FC = () => {
       try {
         const Authorization = `Bearer ${token}`;
         setIsLoading(true);
-        const { data } = await api.get('/products/filter', {
+        const { data } = await api.get('/products', {
           headers: {
             Authorization,
           },
