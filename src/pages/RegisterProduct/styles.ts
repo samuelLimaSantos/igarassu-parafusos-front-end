@@ -157,25 +157,52 @@ export const ThirdStep = styled.div`
         margin-top: 2px;
       }
 
-      select {
-        margin-top: 8px;
-        height: 40px;
-        width: 100%;
-        padding: 8px;
-        font-weight: normal;
-        font-size: 14px;
-        outline: none;
-        border-radius: 8px;
-        border: 1px solid #dedede;
-        background-color: #fdfdfd;
-      }
+      .select-group {
+        display: flex;
+        align-items: center;
 
-      select:focus-within {
-        outline: 2px solid var(--primary);
-        border-radius: 8px;
+        select {
+          margin-top: 8px;
+          height: 40px;
+          width: 100%;
+          padding: 8px;
+          font-weight: normal;
+          font-size: 14px;
+          outline: none;
+          border-radius: 8px;
+          border: 1px solid #dedede;
+          background-color: #fdfdfd;
+        }
+
+        select:focus-within {
+          outline: 2px solid var(--primary);
+          border-radius: 8px;
+        }
+
+        button {
+          height: 40px;
+          margin-top: 8px;
+          width: 40px;
+          border: none;
+          border-radius: 8px;
+          background-color: var(--primary);
+          margin-left: 8px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          svg {
+            color: #fff;
+          }
+        }
+        .cancel {
+          background-color: var(--danger);
+        }
       }
 
       .new-category-container {
+        transition: 1s;
         margin-top: 32px;
 
         article {

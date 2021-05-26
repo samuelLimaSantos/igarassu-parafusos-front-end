@@ -9,6 +9,7 @@ import {
 } from 'react';
 import { useHistory } from 'react-router-dom';
 import Paginate from 'react-paginate';
+import { FiPlus, FiX } from 'react-icons/fi';
 import Loading from '../../components/Loading';
 import { BreadCrumb } from '../../components/BreadCrumb';
 import Header from '../../components/Header';
@@ -41,6 +42,7 @@ const RegisterProduct: React.FC = () => {
   const [pageStepCount, setPageStepCount] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState<Categories[]>([]);
+  const [showFieldNewCategory, setShowFieldNewCategory] = useState(false);
   const [newCategory, setNewCategory] = useState('');
   const [category, setCategory] = useState('');
   const [type, setType] = useState('');
@@ -70,7 +72,7 @@ const RegisterProduct: React.FC = () => {
         break;
 
       case 3:
-        if (category === 'new-category') {
+        if (showFieldNewCategory) {
           newCategory.length > 0 ? setPageStepCount(4) : setPageStepCount(3);
           break;
         } else {
@@ -102,6 +104,7 @@ const RegisterProduct: React.FC = () => {
     quantity,
     priceBuy,
     priceSell,
+    showFieldNewCategory,
   ]);
 
   useEffect(() => {
@@ -143,7 +146,7 @@ const RegisterProduct: React.FC = () => {
             price_buy: Number(priceBuy.substring(2).replace(',', '.')),
             description,
             image_id: imageId,
-            category: category === 'new-category' ? newCategory : category,
+            category: showFieldNewCategory ? newCategory : category,
           },
           {
             headers: {
@@ -184,6 +187,7 @@ const RegisterProduct: React.FC = () => {
       unity,
       setToastInfo,
       history,
+      showFieldNewCategory,
     ],
   );
 
@@ -297,20 +301,41 @@ const RegisterProduct: React.FC = () => {
                   <div className="container-input">
                     <label htmlFor="categories">Categorias</label>
 
-                    <select
-                      id="categories"
-                      value={category}
-                      onChange={({ target }) => setCategory(target.value)}
-                    >
-                      {categories.map(category => (
-                        <option key={category.id} value={category.title}>
-                          {category.title}
-                        </option>
-                      ))}
-                      <option value="new-category">Criar nova categoria</option>
-                    </select>
+                    <div className="select-group">
+                      <select
+                        id="categories"
+                        value={category}
+                        onChange={({ target }) => setCategory(target.value)}
+                        disabled={showFieldNewCategory}
+                      >
+                        {categories.map(category => (
+                          <option key={category.id} value={category.title}>
+                            {category.title}
+                          </option>
+                        ))}
+                        {/* <option value="new-category">Criar nova categoria</option> */}
+                      </select>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowFieldNewCategory(!showFieldNewCategory);
+                        }}
+                        className={showFieldNewCategory ? 'cancel' : 'add'}
+                        title={
+                          showFieldNewCategory
+                            ? 'Cancelar criação de categoria'
+                            : 'Criar nova categoria'
+                        }
+                      >
+                        {showFieldNewCategory ? (
+                          <FiX size={22} />
+                        ) : (
+                          <FiPlus size={22} />
+                        )}
+                      </button>
+                    </div>
 
-                    {category === 'new-category' && (
+                    {showFieldNewCategory && (
                       <>
                         <p>
                           Ao selecionar essa opção você está criando uma nova

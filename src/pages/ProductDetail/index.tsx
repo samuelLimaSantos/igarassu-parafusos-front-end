@@ -5,13 +5,11 @@ import { Context } from '../../context';
 import Loading from '../../components/Loading';
 import Header from '../../components/Header';
 import { BreadCrumb } from '../../components/BreadCrumb';
+import { parseImage } from '../../utils/parseImage';
 
 type Product = {
   cod: string;
   created_at: string;
-  category_id: {
-    title: string;
-  };
   description: string;
   image_id: number;
   name: string;
@@ -23,9 +21,11 @@ type Product = {
 };
 
 const ProductDetail: React.FC = () => {
-  const location = useLocation() as any;
+  const location = useLocation();
   const [product, setProduct] = useState<Product>({} as Product);
+  const [category, setCategory] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [image, setImage] = useState('');
   const { setToastInfo } = useContext(Context);
 
   useEffect(() => {
@@ -41,7 +41,9 @@ const ProductDetail: React.FC = () => {
       })
       .then(response => {
         setProduct(response.data);
+        setCategory(response.data.category_id.title);
         setIsLoading(false);
+        setImage(parseImage(response.data.image_id));
       })
       .catch(error => {
         setIsLoading(false);
@@ -55,11 +57,14 @@ const ProductDetail: React.FC = () => {
 
   return (
     <div>
-      {isLoading && <Loading />}
       <Header />
       <BreadCrumb />
+      {isLoading && <Loading />}
       <div className="content">
-        <div className="header">{product.name}</div>
+        <div className="header">
+          {product.name}
+          <img src={image} alt="ícone do produto" />
+        </div>
         <div className="description-block">
           <label>Descrição</label>
           <p>{product.description}</p>
@@ -83,7 +88,7 @@ const ProductDetail: React.FC = () => {
 
             <section className="unit">
               <label>Categoria</label>
-              <span>{product.category_id.title}</span>
+              <span>{category}</span>
             </section>
 
             <section className="unit">
