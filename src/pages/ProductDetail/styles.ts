@@ -90,3 +90,44 @@ export const Content = styled.div`
     }
   }
 `;
+
+export const UpdateInventoryContent = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%;
+  margin: 0 auto;
+
+  .block {
+    display: flex;
+    flex-direction: column;
+
+    label {
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100px;
+      border-radius: 8px;
+      border: 1px solid var(--primary);
+      height: 42px;
+      padding: 8px;
+      font-weight: normal;
+      font-size: 14px;
+      outline: none;
+    }
+
+    select {
+      width: 200px;
+      border-radius: 8px;
+      height: 42px;
+      padding: 8px;
+      font-weight: normal;
+      font-size: 14px;
+      border: none;
+      outline: none;
+      background-color: #fff;
+      border: 1px solid var(--primary);
+    }
+  }
+`;

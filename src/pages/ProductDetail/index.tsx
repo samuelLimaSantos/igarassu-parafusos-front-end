@@ -8,9 +8,9 @@ import Loading from '../../components/Loading';
 import Header from '../../components/Header';
 import { BreadCrumb } from '../../components/BreadCrumb';
 import { parseImage } from '../../utils/parseImage';
-import { Container, Content } from './styles';
 import { BaseModal } from '../../components/BaseModal';
 import '@szhsin/react-menu/dist/index.css';
+import { Container, Content, UpdateInventoryContent } from './styles';
 
 type Product = {
   id: string;
@@ -25,6 +25,11 @@ type Product = {
   quantity: number;
   type: string;
   unity: string;
+};
+
+type UpdateInventory = {
+  quantity: number;
+  transaction_type: string;
 };
 
 const ProductDetail: React.FC = () => {
@@ -50,6 +55,14 @@ const ProductDetail: React.FC = () => {
   const [image, setImage] = useState('');
   const { setToastInfo } = useContext(Context);
   const [deleteModal, setDeleteModal] = useState(false);
+  const [updateInventoryModal, setUpdateInventoryModal] = useState(false);
+  const [
+    updateInventoryData,
+    setUpdateInventoryData,
+  ] = useState<UpdateInventory>({
+    quantity: 1,
+    transaction_type: 'income',
+  });
 
   const menuIcon = (
     <MenuButton className="button-menu">
@@ -105,16 +118,54 @@ const ProductDetail: React.FC = () => {
           message: error.response.data.message,
           type: 'error',
           showToast: true,
-          redirectPath: '/registerProduct',
+          redirectPath: `/product/${product.id}`,
         });
         setIsLoading(false);
       });
   }, [history, product.id, setToastInfo, token]);
 
+  const handleUpdateInventory = useCallback(() => {
+    console.log(updateInventoryData);
+    api
+      .put(
+        `/products/inventory/${product.id}`,
+        {
+          quantity: updateInventoryData.quantity,
+          transaction_type: updateInventoryData.transaction_type,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      .then(() => {
+        setToastInfo({
+          message: 'Produto atualizado com sucesso!',
+          type: 'success',
+          showToast: true,
+        });
+        setIsLoading(false);
+        history.push(`/product/${product.id}`);
+      })
+      .catch(error => {
+        setToastInfo({
+          message: error.response.data.message,
+          type: 'error',
+          showToast: true,
+          redirectPath: `/product/${product.id}`,
+        });
+        setIsLoading(false);
+      });
+  }, [history, product.id, setToastInfo, token, updateInventoryData]);
+
   const quitModal = useCallback((modalType: string) => {
     switch (modalType) {
       case 'delete':
         setDeleteModal(false);
+        break;
+      case 'updateInventory':
+        setUpdateInventoryModal(false);
         break;
       default:
         return '';
@@ -128,11 +179,15 @@ const ProductDetail: React.FC = () => {
           handleDeleteProduct();
           setDeleteModal(false);
           break;
+        case 'updateInventory':
+          handleUpdateInventory();
+          setUpdateInventoryModal(false);
+          break;
         default:
           return '';
       }
     },
-    [handleDeleteProduct],
+    [handleDeleteProduct, handleUpdateInventory],
   );
 
   return (
@@ -151,7 +206,9 @@ const ProductDetail: React.FC = () => {
             <Menu menuButton={menuIcon} className="button-menu">
               <MenuItem>Ver histórico de transações</MenuItem>
               <SubMenu label="Atualizar">
-                <MenuItem>Estoque do produto</MenuItem>
+                <MenuItem onClick={() => setUpdateInventoryModal(true)}>
+                  Estoque do produto
+                </MenuItem>
                 <MenuItem>Dados do produto</MenuItem>
               </SubMenu>
               <MenuItem onClick={() => setDeleteModal(true)}>
@@ -159,6 +216,54 @@ const ProductDetail: React.FC = () => {
               </MenuItem>
             </Menu>
           </div>
+
+          {updateInventoryModal && (
+            <BaseModal
+              title="Atualizar estoque"
+              buttonText="Atualizar"
+              quitModal={() => {
+                quitModal('updateInventory');
+              }}
+              actionButton={() => {
+                actionModalButton('updateInventory');
+              }}
+            >
+              <UpdateInventoryContent>
+                <section className="block">
+                  <label htmlFor="quantity">Quantidade</label>
+                  <input
+                    type="number"
+                    id="quantity"
+                    min={1}
+                    value={updateInventoryData.quantity}
+                    onChange={({ target }) => {
+                      setUpdateInventoryData({
+                        ...updateInventoryData,
+                        quantity: Number(target.value),
+                      });
+                    }}
+                  />
+                </section>
+
+                <section className="block">
+                  <label htmlFor="OperationType">Tipo de operação</label>
+                  <select
+                    id="OperationType"
+                    value={updateInventoryData.transaction_type}
+                    onChange={({ target }) => {
+                      setUpdateInventoryData({
+                        ...updateInventoryData,
+                        transaction_type: target.value,
+                      });
+                    }}
+                  >
+                    <option value="income">Entrada</option>
+                    <option value="outcome">Saída</option>
+                  </select>
+                </section>
+              </UpdateInventoryContent>
+            </BaseModal>
+          )}
 
           {deleteModal && (
             <BaseModal
@@ -171,8 +276,11 @@ const ProductDetail: React.FC = () => {
                 actionModalButton('delete');
               }}
             >
-              Tem certeza que deseja deletar esse produto? Essa ação é
-              irreversível!
+              <p style={{ width: 450 }}>
+                Tem certeza que deseja deletar esse produto? Ao fazer isso você
+                perderá todas as informações do produto e histórico. Essa ação é
+                irreversível!
+              </p>
             </BaseModal>
           )}
         </div>
