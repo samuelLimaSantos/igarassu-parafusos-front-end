@@ -1678,6 +1678,11 @@
     "@svgr/plugin-svgo" "^5.4.0"
     loader-utils "^2.0.0"
 
+"@szhsin/react-menu@^1.10.0":
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@szhsin/react-menu/-/react-menu-1.10.0.tgz#e4a9bfdd77164870d6daf9cafe8e1d1c84e61f0b"
+  integrity sha512-N8+OcI8JfYp5oKurbxwYkDS7o+/fPuW5bi1syVVIhaQdPJaQ+P09o3tTxmlWHTdmDzKxfw0zNhRHF7Bz5j9m0Q==
+
 "@testing-library/dom@^7.28.1":
   version "7.29.4"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-7.29.4.tgz#1647c2b478789621ead7a50614ad81ab5ae5b86c"

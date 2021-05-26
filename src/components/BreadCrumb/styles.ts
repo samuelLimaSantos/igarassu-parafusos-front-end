@@ -10,21 +10,28 @@ export const Container = styled.div`
   a {
     color: var(--dark);
     text-decoration: none;
+    width: 100px;
   }
 
   span {
-    width: 100px;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    svg {
-      margin-right: 6px;
-    }
+    a {
+      width: 100px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      svg {
+        margin-right: 6px;
+      }
 
-    transition: color 0.1s;
+      transition: color 0.1s;
+    }
   }
 
   span:hover {
     color: var(--primary);
+
+    svg {
+      color: var(--primary);
+    }
   }
 `;

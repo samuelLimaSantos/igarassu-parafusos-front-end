@@ -5,12 +5,12 @@ import { Container } from './styles';
 const BreadCrumb: React.FC = () => {
   return (
     <Container>
-      <Link to="/products">
-        <span>
+      <span>
+        <Link to="/products">
           <FiChevronLeft size={32} />
           <span>Voltar</span>
-        </span>
-      </Link>
+        </Link>
+      </span>
     </Container>
   );
 };

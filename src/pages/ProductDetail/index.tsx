@@ -1,15 +1,21 @@
 import { useLocation } from 'react-router-dom';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useCallback } from 'react';
+import { FiAlignRight } from 'react-icons/fi';
+import { Menu, MenuItem, MenuButton, SubMenu } from '@szhsin/react-menu';
+import { NONAME } from 'dns';
 import api from '../../services/api';
 import { Context } from '../../context';
 import Loading from '../../components/Loading';
 import Header from '../../components/Header';
 import { BreadCrumb } from '../../components/BreadCrumb';
 import { parseImage } from '../../utils/parseImage';
+import { Container, Content } from './styles';
+import '@szhsin/react-menu/dist/index.css';
 
 type Product = {
   cod: string;
   created_at: string;
+  updated_at: string;
   description: string;
   image_id: number;
   name: string;
@@ -22,11 +28,29 @@ type Product = {
 
 const ProductDetail: React.FC = () => {
   const location = useLocation();
-  const [product, setProduct] = useState<Product>({} as Product);
+  const [product, setProduct] = useState<Product>({
+    cod: '',
+    created_at: '',
+    description: '',
+    image_id: 0,
+    name: '',
+    price_buy: '',
+    price_sell: '',
+    quantity: 0,
+    type: '',
+    unity: '',
+    updated_at: '',
+  });
   const [category, setCategory] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [image, setImage] = useState('');
   const { setToastInfo } = useContext(Context);
+
+  const menuIcon = (
+    <MenuButton className="button-menu">
+      <FiAlignRight size={40} />
+    </MenuButton>
+  );
 
   useEffect(() => {
     const id = location.pathname.split('/').slice(-1)[0];
@@ -56,71 +80,80 @@ const ProductDetail: React.FC = () => {
   }, [location, setToastInfo]);
 
   return (
-    <div>
+    <Container>
       <Header />
       <BreadCrumb />
       {isLoading && <Loading />}
-      <div className="content">
+      <Content>
         <div className="header">
-          {product.name}
-          <img src={image} alt="ícone do produto" />
+          <div className="name-icon">
+            <img src={image} alt="ícone do produto" />
+            <h1>{product.name}</h1>
+          </div>
+          <div className="menu-container">
+            <Menu menuButton={menuIcon} className="button-menu">
+              <MenuItem>Ver histórico de transações</MenuItem>
+              <SubMenu label="Atualizar">
+                <MenuItem>Estoque do produto</MenuItem>
+                <MenuItem>Dados do produto</MenuItem>
+              </SubMenu>
+              <MenuItem>Excluir produto</MenuItem>
+            </Menu>
+          </div>
         </div>
+
         <div className="description-block">
           <label>Descrição</label>
           <p>{product.description}</p>
         </div>
-        <div className="info-block">
-          <section className="info">
-            <section className="unit">
-              <label>Código</label>
-              <span>{product.cod}</span>
-            </section>
-
-            <section className="unit">
-              <label>Unidade</label>
-              <span>{product.unity}</span>
-            </section>
-
-            <section className="unit">
-              <label>Tipo</label>
-              <span>{product.type}</span>
-            </section>
-
-            <section className="unit">
-              <label>Categoria</label>
-              <span>{category}</span>
-            </section>
-
-            <section className="unit">
-              <label>Preço de compra</label>
-              <span>{product.price_buy}</span>
-            </section>
-
-            <section className="unit">
-              <label>Preço de venda</label>
-              <span>{product.price_sell}</span>
-            </section>
-
-            <section className="unit">
-              <label>Quantidade em estoque</label>
-              <span>{product.quantity}</span>
-            </section>
-
-            <section className="unit">
-              <label>Data de cadastro</label>
-              <span>{product.created_at}</span>
-            </section>
+        <section className="info-block">
+          <section className="unit">
+            <label>Código do produto</label>
+            <span>{product.cod}</span>
           </section>
 
-          <section className="buttons">
-            <button type="button">Excluir produto</button>
-            <button type="button">Atualizar estoque</button>
-            <button type="button">Atualizar produto</button>
-            <button type="button">Ver histórico</button>
+          <section className="unit">
+            <label>Unidade</label>
+            <span>{product.unity}</span>
           </section>
-        </div>
-      </div>
-    </div>
+
+          <section className="unit">
+            <label>Tipo</label>
+            <span>{product.type}</span>
+          </section>
+
+          <section className="unit">
+            <label>Categoria</label>
+            <span>{category}</span>
+          </section>
+
+          <section className="unit">
+            <label>Preço de compra</label>
+            <span>R$ {product.price_buy.replace('.', ',')}</span>
+          </section>
+
+          <section className="unit">
+            <label>Preço de venda</label>
+            <span>R$ {product.price_sell.replace('.', ',')}</span>
+          </section>
+
+          <section className="unit">
+            <label>Quantidade em estoque</label>
+            <span>{product.quantity}</span>
+          </section>
+
+          <section className="unit">
+            <label>Data de cadastro</label>
+            <span>{product.created_at}</span>
+          </section>
+
+          <section className="unit">
+            <label>Última atualização</label>
+            <span>{product.updated_at}</span>
+          </section>
+        </section>
+      </Content>
+    </Container>
   );
 };
 
