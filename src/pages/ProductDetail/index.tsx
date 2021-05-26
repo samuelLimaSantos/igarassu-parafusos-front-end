@@ -1,8 +1,7 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import { useContext, useEffect, useState, useCallback } from 'react';
 import { FiAlignRight } from 'react-icons/fi';
 import { Menu, MenuItem, MenuButton, SubMenu } from '@szhsin/react-menu';
-import { NONAME } from 'dns';
 import api from '../../services/api';
 import { Context } from '../../context';
 import Loading from '../../components/Loading';
@@ -10,9 +9,11 @@ import Header from '../../components/Header';
 import { BreadCrumb } from '../../components/BreadCrumb';
 import { parseImage } from '../../utils/parseImage';
 import { Container, Content } from './styles';
+import { BaseModal } from '../../components/BaseModal';
 import '@szhsin/react-menu/dist/index.css';
 
 type Product = {
+  id: string;
   cod: string;
   created_at: string;
   updated_at: string;
@@ -27,8 +28,11 @@ type Product = {
 };
 
 const ProductDetail: React.FC = () => {
+  const token = localStorage.getItem('igarassu-parafusos:token');
+  const history = useHistory();
   const location = useLocation();
   const [product, setProduct] = useState<Product>({
+    id: '',
     cod: '',
     created_at: '',
     description: '',
@@ -45,6 +49,7 @@ const ProductDetail: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [image, setImage] = useState('');
   const { setToastInfo } = useContext(Context);
+  const [deleteModal, setDeleteModal] = useState(false);
 
   const menuIcon = (
     <MenuButton className="button-menu">
@@ -79,11 +84,63 @@ const ProductDetail: React.FC = () => {
       });
   }, [location, setToastInfo]);
 
+  const handleDeleteProduct = useCallback(() => {
+    api
+      .delete(`/products/${product.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(() => {
+        setToastInfo({
+          message: 'Produto deletado com sucesso!',
+          type: 'success',
+          showToast: true,
+        });
+        setIsLoading(false);
+        history.push('/products');
+      })
+      .catch(error => {
+        setToastInfo({
+          message: error.response.data.message,
+          type: 'error',
+          showToast: true,
+          redirectPath: '/registerProduct',
+        });
+        setIsLoading(false);
+      });
+  }, [history, product.id, setToastInfo, token]);
+
+  const quitModal = useCallback((modalType: string) => {
+    switch (modalType) {
+      case 'delete':
+        setDeleteModal(false);
+        break;
+      default:
+        return '';
+    }
+  }, []);
+
+  const actionModalButton = useCallback(
+    (modalType: string) => {
+      switch (modalType) {
+        case 'delete':
+          handleDeleteProduct();
+          setDeleteModal(false);
+          break;
+        default:
+          return '';
+      }
+    },
+    [handleDeleteProduct],
+  );
+
   return (
     <Container>
       <Header />
       <BreadCrumb />
       {isLoading && <Loading />}
+
       <Content>
         <div className="header">
           <div className="name-icon">
@@ -97,9 +154,27 @@ const ProductDetail: React.FC = () => {
                 <MenuItem>Estoque do produto</MenuItem>
                 <MenuItem>Dados do produto</MenuItem>
               </SubMenu>
-              <MenuItem>Excluir produto</MenuItem>
+              <MenuItem onClick={() => setDeleteModal(true)}>
+                Excluir produto
+              </MenuItem>
             </Menu>
           </div>
+
+          {deleteModal && (
+            <BaseModal
+              title="Deletar produto"
+              buttonText="Deletar"
+              quitModal={() => {
+                quitModal('delete');
+              }}
+              actionButton={() => {
+                actionModalButton('delete');
+              }}
+            >
+              Tem certeza que deseja deletar esse produto? Essa ação é
+              irreversível!
+            </BaseModal>
+          )}
         </div>
 
         <div className="description-block">
