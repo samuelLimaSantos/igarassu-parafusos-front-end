@@ -6,7 +6,7 @@ import screwImage from '../assets/screw.svg';
 import toolImage from '../assets/tool.svg';
 import constructionToolsImage from '../assets/construction-tools.svg';
 
-export function parseImage(imageId: number): string {
+export function parseImage(imageId: number): string | string {
   switch (imageId) {
     case 1:
       return drillImage;

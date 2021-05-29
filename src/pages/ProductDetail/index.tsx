@@ -1,5 +1,5 @@
-import { useLocation, useHistory } from 'react-router-dom';
-import { useContext, useEffect, useState, useCallback } from 'react';
+import { useLocation, useHistory, Link } from 'react-router-dom';
+import { useContext, useEffect, useState, useCallback, useMemo } from 'react';
 import { FiAlignRight } from 'react-icons/fi';
 import { Menu, MenuItem, MenuButton, SubMenu } from '@szhsin/react-menu';
 import api from '../../services/api';
@@ -36,6 +36,14 @@ const ProductDetail: React.FC = () => {
   const token = localStorage.getItem('igarassu-parafusos:token');
   const history = useHistory();
   const location = useLocation();
+
+  const defaultUpdateInventoryData = useMemo(() => {
+    return {
+      quantity: 1,
+      transaction_type: 'income',
+    };
+  }, []);
+
   const [product, setProduct] = useState<Product>({
     id: '',
     cod: '',
@@ -59,16 +67,15 @@ const ProductDetail: React.FC = () => {
   const [
     updateInventoryData,
     setUpdateInventoryData,
-  ] = useState<UpdateInventory>({
-    quantity: 1,
-    transaction_type: 'income',
-  });
+  ] = useState<UpdateInventory>(defaultUpdateInventoryData);
 
   const menuIcon = (
     <MenuButton className="button-menu">
       <FiAlignRight size={40} />
     </MenuButton>
   );
+
+  // const [name, setName] = useState('');
 
   useEffect(() => {
     const id = location.pathname.split('/').slice(-1)[0];
@@ -86,6 +93,7 @@ const ProductDetail: React.FC = () => {
         setCategory(response.data.category_id.title);
         setIsLoading(false);
         setImage(parseImage(response.data.image_id));
+        // setName(response.data.name);
       })
       .catch(error => {
         setIsLoading(false);
@@ -125,7 +133,6 @@ const ProductDetail: React.FC = () => {
   }, [history, product.id, setToastInfo, token]);
 
   const handleUpdateInventory = useCallback(() => {
-    console.log(updateInventoryData);
     api
       .put(
         `/products/inventory/${product.id}`,
@@ -159,18 +166,59 @@ const ProductDetail: React.FC = () => {
       });
   }, [history, product.id, setToastInfo, token, updateInventoryData]);
 
-  const quitModal = useCallback((modalType: string) => {
-    switch (modalType) {
-      case 'delete':
-        setDeleteModal(false);
-        break;
-      case 'updateInventory':
-        setUpdateInventoryModal(false);
-        break;
-      default:
-        return '';
-    }
-  }, []);
+  // const handleUpdateInventory = useCallback(() => {
+  //   api
+  //     .put(
+  //       `/products/${product.id}`,
+  //       {
+  //         name,
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       },
+  //     )
+  //     .then(() => {
+  //       setToastInfo({
+  //         message: 'Produto atualizado com sucesso!',
+  //         type: 'success',
+  //         showToast: true,
+  //       });
+  //       setIsLoading(false);
+  //       history.push(`/product/${product.id}`);
+  //     })
+  //     .catch(error => {
+  //       setToastInfo({
+  //         message: error.response.data.message,
+  //         type: 'error',
+  //         showToast: true,
+  //         redirectPath: `/product/${product.id}`,
+  //       });
+  //       setIsLoading(false);
+  //     });
+  // }, [history, product.id, setToastInfo, token, name]);
+
+  const quitModal = useCallback(
+    (modalType: string) => {
+      switch (modalType) {
+        case 'delete':
+          setDeleteModal(false);
+          break;
+        case 'updateInventory':
+          setUpdateInventoryModal(false);
+          setUpdateInventoryData(defaultUpdateInventoryData);
+          // setName(product.name);
+          break;
+        default:
+          return '';
+      }
+    },
+    [
+      defaultUpdateInventoryData,
+      // product.name
+    ],
+  );
 
   const actionModalButton = useCallback(
     (modalType: string) => {
@@ -182,12 +230,20 @@ const ProductDetail: React.FC = () => {
         case 'updateInventory':
           handleUpdateInventory();
           setUpdateInventoryModal(false);
+          setUpdateInventoryData(defaultUpdateInventoryData);
+          // setName(product.name);
+
           break;
         default:
           return '';
       }
     },
-    [handleDeleteProduct, handleUpdateInventory],
+    [
+      handleDeleteProduct,
+      handleUpdateInventory,
+      defaultUpdateInventoryData,
+      // product.name,
+    ],
   );
 
   return (
@@ -204,7 +260,11 @@ const ProductDetail: React.FC = () => {
           </div>
           <div className="menu-container">
             <Menu menuButton={menuIcon} className="button-menu">
-              <MenuItem>Ver histórico de transações</MenuItem>
+              <MenuItem>
+                <Link to={`/transactions/${product.id}`}>
+                  Ver histórico de transações
+                </Link>
+              </MenuItem>
               <SubMenu label="Atualizar">
                 <MenuItem onClick={() => setUpdateInventoryModal(true)}>
                   Estoque do produto
@@ -261,6 +321,15 @@ const ProductDetail: React.FC = () => {
                     <option value="outcome">Saída</option>
                   </select>
                 </section>
+
+                {/* <section>
+                  <label htmlFor="name">Nome</label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={({ target }) => setName(target.value)}
+                  />
+                </section> */}
               </UpdateInventoryContent>
             </BaseModal>
           )}

@@ -1,13 +1,24 @@
 import React from 'react';
-import { Route, Switch, BrowserRouter, Redirect } from 'react-router-dom';
+import {
+  Route,
+  Switch,
+  BrowserRouter,
+  Redirect,
+  RouteProps,
+} from 'react-router-dom';
 import Login from './pages/Login';
 import { ProductDetail } from './pages/ProductDetail';
 import Products from './pages/Products';
 import { RegisterProduct } from './pages/RegisterProduct';
 import { Search } from './pages/Search';
+import { TransactionHistory } from './pages/TransactionHistory';
+
+interface PrivateRouteProp extends RouteProps {
+  isPrivate: boolean;
+}
 
 const Routes: React.FC = () => {
-  function PrivateRoute({ isPrivate, ...rest }: any) {
+  function PrivateRoute({ isPrivate, ...rest }: PrivateRouteProp) {
     const token = localStorage.getItem('igarassu-parafusos:token');
     const userId = localStorage.getItem('igarassu-parafusos:userId');
 
@@ -30,6 +41,11 @@ const Routes: React.FC = () => {
         />
         <PrivateRoute path="/search" component={Search} isPrivate />
         <PrivateRoute path="/product" component={ProductDetail} isPrivate />
+        <PrivateRoute
+          path="/transactions"
+          component={TransactionHistory}
+          isPrivate
+        />
       </Switch>
     </BrowserRouter>
   );

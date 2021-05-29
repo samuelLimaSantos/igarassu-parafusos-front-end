@@ -34,6 +34,11 @@ export const Content = styled.div`
         cursor: pointer;
       }
 
+      a {
+        text-decoration: none;
+        color: var(--dark);
+      }
+
       .button-menu {
         border: none;
         background-color: #fff;
