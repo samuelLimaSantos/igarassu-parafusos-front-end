@@ -28,4 +28,10 @@ export default createGlobalStyle`
     font: 600 18px 'Roboto', sans-serif;
   }
 
+  .space-bottom {
+    width: 1px;
+    height: 1px;
+    margin-top: 32px;
+  }
+
 `;

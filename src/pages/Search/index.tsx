@@ -109,6 +109,7 @@ const Search: React.FC = () => {
           }}
         />
       </ContainerPaginator>
+      <div className="space-bottom" />
     </Container>
   );
 };

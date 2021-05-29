@@ -1,5 +1,10 @@
 import styled from 'styled-components';
 
+export const Content = styled.div`
+  max-width: 1100px;
+  margin: 0 auto;
+`;
+
 export const ContainerPaginator = styled.div`
   width: 100%;
   margin-top: 60px;
@@ -51,6 +56,55 @@ export const ContainerPaginator = styled.div`
     .previous-label-paginator:hover,
     .next-label-paginator:hover {
       color: var(--primary);
+    }
+  }
+`;
+
+export const Total = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
+  margin-top: 16px;
+  margin-bottom: 16px;
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .outcomes,
+  .incomes {
+    display: flex;
+    flex-direction: column;
+    text-align: end;
+
+    span:nth-child(2) {
+      font-weight: normal;
+      font-size: 16px;
+    }
+  }
+
+  .outcomes {
+    span:first-child {
+      color: #d40707;
+    }
+  }
+
+  .incomes {
+    span:first-child {
+      color: #1e9400;
+    }
+  }
+
+  .actual-quantity {
+    text-align: end;
+    span {
+      font-size: 16px;
+      font-weight: normal;
     }
   }
 `;

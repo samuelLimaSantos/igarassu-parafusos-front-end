@@ -469,6 +469,7 @@ const RegisterProduct: React.FC = () => {
           </ContainerPaginator>
         </Form>
       </Content>
+      <div className="space-bottom" />
     </>
   );
 };

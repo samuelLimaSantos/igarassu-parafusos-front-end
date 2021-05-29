@@ -7,7 +7,7 @@ import Header from '../../components/Header';
 import { Context } from '../../context';
 import Loading from '../../components/Loading';
 import { TransactionItem } from '../../components/TransactionItem';
-import { ContainerPaginator } from './styles';
+import { ContainerPaginator, Content, Total } from './styles';
 
 type ProductData = {
   cod: string;
@@ -85,7 +85,7 @@ const TransactionHistory: React.FC = () => {
       <BreadCrumb goBack={`/product/${id}`} />
       {isLoading && <Loading />}
 
-      <div className="content">
+      <Content>
         {transactions.map(transaction => (
           <TransactionItem transaction={transaction} key={transaction.id} />
         ))}
@@ -108,20 +108,30 @@ const TransactionHistory: React.FC = () => {
           />
         </ContainerPaginator>
 
-        <div className="total">
+        <Total>
           <h1>Total</h1>
           <div className="outcomes">
             <span>Saídas</span>
-            <span>{totalIncomesAndOutcomes.outcomes}</span>
+            <span>
+              <strong>{totalIncomesAndOutcomes.outcomes} </strong>
+              {totalProducts > 1
+                ? `${transactions[0]?.product_id.unity}s`
+                : transactions[0]?.product_id.unity}
+            </span>
           </div>
 
           <div className="incomes">
             <span>Entradas</span>
-            <span>{totalIncomesAndOutcomes.incomes}</span>
+            <span>
+              <strong>{totalIncomesAndOutcomes.incomes} </strong>
+              {totalProducts > 1
+                ? `${transactions[0]?.product_id.unity}s`
+                : transactions[0]?.product_id.unity}
+            </span>
           </div>
 
           <div className="actual-quantity">
-            <h2>Quantidade atual</h2>
+            <h1>Quantidade atual</h1>
             <span>
               {totalProducts}{' '}
               {totalProducts > 1
@@ -129,8 +139,9 @@ const TransactionHistory: React.FC = () => {
                 : transactions[0]?.product_id.unity}
             </span>
           </div>
-        </div>
-      </div>
+        </Total>
+        <div className="space-bottom" />
+      </Content>
     </div>
   );
 };

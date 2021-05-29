@@ -94,6 +94,7 @@ const Products: React.FC = () => {
           }}
         />
       </ContainerPaginator>
+      <div className="space-bottom" />
     </Container>
   );
 };

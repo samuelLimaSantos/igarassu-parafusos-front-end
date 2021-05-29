@@ -405,6 +405,7 @@ const ProductDetail: React.FC = () => {
           </section>
         </section>
       </Content>
+      <div className="space-bottom" />
     </Container>
   );
 };
