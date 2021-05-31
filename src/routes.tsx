@@ -12,6 +12,7 @@ import Products from './pages/Products';
 import { RegisterProduct } from './pages/RegisterProduct';
 import { Search } from './pages/Search';
 import { TransactionHistory } from './pages/TransactionHistory';
+import { ProductUpdate } from './pages/UpdateProduct';
 
 interface PrivateRouteProp extends RouteProps {
   isPrivate: boolean;
@@ -46,6 +47,7 @@ const Routes: React.FC = () => {
           component={TransactionHistory}
           isPrivate
         />
+        <PrivateRoute path="/update" component={ProductUpdate} isPrivate />
       </Switch>
     </BrowserRouter>
   );

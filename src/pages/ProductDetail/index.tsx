@@ -269,7 +269,18 @@ const ProductDetail: React.FC = () => {
                 <MenuItem onClick={() => setUpdateInventoryModal(true)}>
                   Estoque do produto
                 </MenuItem>
-                <MenuItem>Dados do produto</MenuItem>
+                <MenuItem>
+                  <Link
+                    to={{
+                      pathname: `/update/${product.id}`,
+                      state: {
+                        id: product.id,
+                      },
+                    }}
+                  >
+                    Dados do produto
+                  </Link>
+                </MenuItem>
               </SubMenu>
               <MenuItem onClick={() => setDeleteModal(true)}>
                 Excluir produto
