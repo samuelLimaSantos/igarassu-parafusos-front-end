@@ -24,6 +24,8 @@ export const Content = styled.div`
       img {
         width: 150px;
         margin-right: 16px;
+        border: 6px solid var(--primary);
+        border-radius: 50%;
       }
     }
 

@@ -44,10 +44,8 @@ type Product = {
 
 const ProductUpdate: React.FC = () => {
   const [step, setStep] = useState(1);
-
   const [pageStepCount, setPageStepCount] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-
   const [canSubmit, setCanSubmit] = useState(false);
   const [product, setProduct] = useState<Product>({
     description: '',
@@ -226,7 +224,7 @@ const ProductUpdate: React.FC = () => {
                         src={hammerImage}
                         alt="ícone"
                         onClick={() => {
-                          product.image_id !== 1 &&
+                          product.image_id !== 2 &&
                             setProduct({ ...product, image_id: 2 });
                         }}
                         className={
@@ -237,7 +235,7 @@ const ProductUpdate: React.FC = () => {
                         src={keyImage}
                         alt="ícone"
                         onClick={() => {
-                          product.image_id !== 1 &&
+                          product.image_id !== 3 &&
                             setProduct({ ...product, image_id: 3 });
                         }}
                         className={
@@ -248,7 +246,7 @@ const ProductUpdate: React.FC = () => {
                         src={measuringImage}
                         alt="ícone"
                         onClick={() => {
-                          product.image_id !== 1 &&
+                          product.image_id !== 4 &&
                             setProduct({ ...product, image_id: 4 });
                         }}
                         className={
@@ -259,7 +257,7 @@ const ProductUpdate: React.FC = () => {
                         src={screwImage}
                         alt="ícone"
                         onClick={() => {
-                          product.image_id !== 1 &&
+                          product.image_id !== 5 &&
                             setProduct({ ...product, image_id: 5 });
                         }}
                         className={
@@ -270,7 +268,7 @@ const ProductUpdate: React.FC = () => {
                         src={toolImage}
                         alt="ícone"
                         onClick={() => {
-                          product.image_id !== 1 &&
+                          product.image_id !== 6 &&
                             setProduct({ ...product, image_id: 6 });
                         }}
                         className={
@@ -281,7 +279,7 @@ const ProductUpdate: React.FC = () => {
                         src={constructionToolsImage}
                         alt="ícone"
                         onClick={() => {
-                          product.image_id !== 1 &&
+                          product.image_id !== 7 &&
                             setProduct({ ...product, image_id: 7 });
                         }}
                         className={

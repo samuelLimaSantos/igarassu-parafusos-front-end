@@ -1,12 +1,16 @@
 import { useState, useEffect, useContext, useCallback } from 'react';
 import Paginate from 'react-paginate';
 import { useLocation } from 'react-router-dom';
+import { DateRange, OnChangeProps, Range } from 'react-date-range';
+import { ptBR } from 'date-fns/esm/locale';
 import { BreadCrumb } from '../../components/BreadCrumb';
 import api from '../../services/api';
 import Header from '../../components/Header';
 import { Context } from '../../context';
 import Loading from '../../components/Loading';
 import { TransactionItem } from '../../components/TransactionItem';
+import 'react-date-range/dist/styles.css';
+import 'react-date-range/dist/theme/default.css';
 import { ContainerPaginator, Content, Total } from './styles';
 
 type ProductData = {
@@ -27,6 +31,20 @@ export type TransactionsData = {
   product_id: ProductData;
 };
 
+type IDate = {
+  startDate: Date;
+  endDate: Date;
+};
+
+type IDateOnChange = {
+  date: IDate;
+};
+
+type IGetTransaction = {
+  page: number;
+  date?: IDate;
+};
+
 const TransactionHistory: React.FC = () => {
   const location = useLocation();
   const id = location.pathname.split('/').slice(-1)[0];
@@ -37,12 +55,22 @@ const TransactionHistory: React.FC = () => {
     incomes: 0,
     outcomes: 0,
   });
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
   const [totalProducts, setTotalProducts] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const { setToastInfo } = useContext(Context);
 
+  const selectionRange: Range = {
+    startDate,
+    endDate,
+    key: 'date',
+    color: '#0E66A8',
+  };
+
   const handleGetTransactions = useCallback(
-    async (page: number) => {
+    async ({ page, date }: IGetTransaction) => {
+      if (date) console.log(date.startDate, date.endDate);
       setIsLoading(true);
       api
         .get(`transactions/${id}`, {
@@ -75,8 +103,16 @@ const TransactionHistory: React.FC = () => {
     [id, setToastInfo, token],
   );
 
+  const onChangeRange = (ranges: OnChangeProps) => {
+    const { date } = ranges as IDateOnChange;
+    const { startDate, endDate } = date;
+    setStartDate(startDate);
+    setEndDate(endDate);
+    handleGetTransactions({ page: 1, date: { endDate, startDate } });
+  };
+
   useEffect(() => {
-    handleGetTransactions(1);
+    handleGetTransactions({ page: 1 });
   }, [handleGetTransactions]);
 
   return (
@@ -86,6 +122,13 @@ const TransactionHistory: React.FC = () => {
       {isLoading && <Loading />}
 
       <Content>
+        <DateRange
+          ranges={[selectionRange]}
+          onChange={onChangeRange}
+          locale={ptBR}
+          maxDate={new Date()}
+        />
+
         {transactions.map(transaction => (
           <TransactionItem transaction={transaction} key={transaction.id} />
         ))}
@@ -103,7 +146,7 @@ const TransactionHistory: React.FC = () => {
             pageClassName="page-paginator"
             containerClassName="container-paginator"
             onPageChange={({ selected }) => {
-              handleGetTransactions(selected + 1);
+              handleGetTransactions({ page: selected + 1 });
             }}
           />
         </ContainerPaginator>

@@ -402,7 +402,10 @@ const ProductDetail: React.FC = () => {
 
           <section className="unit">
             <label>Quantidade em estoque</label>
-            <span>{product.quantity}</span>
+            <span>
+              {product.quantity} {product.unity}
+              {product.quantity > 1 && `s`}
+            </span>
           </section>
 
           <section className="unit">
