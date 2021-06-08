@@ -103,7 +103,7 @@ export const UpdateInventoryContent = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 90%;
-  margin: 0 auto;
+  margin: 0 auto 20px auto;
 
   .block {
     display: flex;

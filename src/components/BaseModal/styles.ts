@@ -26,6 +26,8 @@ export const Content = styled.div`
   display: grid;
   grid-template-rows: 1fr 2fr 1fr;
 
+  max-height: 600px;
+
   .header {
     display: flex;
     justify-content: space-between;

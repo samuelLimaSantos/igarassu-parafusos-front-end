@@ -2,6 +2,8 @@ import { useState, useEffect, useContext, useCallback } from 'react';
 import Paginate from 'react-paginate';
 import { useLocation } from 'react-router-dom';
 import { DateRange, OnChangeProps, Range } from 'react-date-range';
+import { Menu, MenuItem, MenuButton } from '@szhsin/react-menu';
+import { FiFilter, FiX } from 'react-icons/fi';
 import { ptBR } from 'date-fns/esm/locale';
 import { BreadCrumb } from '../../components/BreadCrumb';
 import api from '../../services/api';
@@ -11,7 +13,9 @@ import Loading from '../../components/Loading';
 import { TransactionItem } from '../../components/TransactionItem';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
+import '@szhsin/react-menu/dist/index.css';
 import { ContainerPaginator, Content, Total } from './styles';
+import { BaseModal } from '../../components/BaseModal';
 
 type ProductData = {
   cod: string;
@@ -59,6 +63,8 @@ const TransactionHistory: React.FC = () => {
   const [endDate, setEndDate] = useState(new Date());
   const [totalProducts, setTotalProducts] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [showModalFilter, setShowModalFilter] = useState(false);
+  const [isFiltered, setIsFiltered] = useState(false);
   const { setToastInfo } = useContext(Context);
 
   const selectionRange: Range = {
@@ -70,7 +76,6 @@ const TransactionHistory: React.FC = () => {
 
   const handleGetTransactions = useCallback(
     async ({ page, date }: IGetTransaction) => {
-      if (date) console.log(date.startDate, date.endDate);
       setIsLoading(true);
       api
         .get(`transactions/${id}`, {
@@ -79,6 +84,7 @@ const TransactionHistory: React.FC = () => {
           },
           params: {
             page,
+            date: date && date,
           },
         })
         .then(response => {
@@ -108,12 +114,23 @@ const TransactionHistory: React.FC = () => {
     const { startDate, endDate } = date;
     setStartDate(startDate);
     setEndDate(endDate);
-    handleGetTransactions({ page: 1, date: { endDate, startDate } });
+    // handleGetTransactions({ page: 1, date: { endDate, startDate } });
   };
 
   useEffect(() => {
     handleGetTransactions({ page: 1 });
   }, [handleGetTransactions]);
+
+  const handleGetTransactionsFiltered = () => {
+    setIsFiltered(true);
+    setShowModalFilter(false);
+  };
+
+  const menuIcon = (
+    <MenuButton className="button-menu">
+      <FiFilter size={30} />
+    </MenuButton>
+  );
 
   return (
     <div className="container">
@@ -122,12 +139,45 @@ const TransactionHistory: React.FC = () => {
       {isLoading && <Loading />}
 
       <Content>
-        <DateRange
-          ranges={[selectionRange]}
-          onChange={onChangeRange}
-          locale={ptBR}
-          maxDate={new Date()}
-        />
+        <div className="menu-container">
+          <Menu menuButton={menuIcon} className="button-menu">
+            <MenuItem onClick={() => setShowModalFilter(true)}>
+              Filtrar por data
+            </MenuItem>
+          </Menu>
+          {isFiltered && (
+            <div
+              className="cancel-filter-date"
+              onClick={() => setIsFiltered(false)}
+            >
+              <FiX size={30} title="Desfazer filtro" />
+            </div>
+          )}
+        </div>
+
+        {showModalFilter && (
+          <BaseModal
+            actionButton={handleGetTransactionsFiltered}
+            buttonText="Filtrar"
+            title="Filtro por data"
+            quitModal={() => setShowModalFilter(false)}
+          >
+            <section
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                width: '100%',
+              }}
+            >
+              <DateRange
+                ranges={[selectionRange]}
+                onChange={onChangeRange}
+                locale={ptBR}
+                maxDate={new Date()}
+              />
+            </section>
+          </BaseModal>
+        )}
 
         {transactions.map(transaction => (
           <TransactionItem transaction={transaction} key={transaction.id} />

@@ -3,6 +3,38 @@ import styled from 'styled-components';
 export const Content = styled.div`
   max-width: 1100px;
   margin: 0 auto;
+
+  .menu-container {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+    svg {
+      color: var(--primary);
+      cursor: pointer;
+    }
+
+    a {
+      text-decoration: none;
+      color: var(--dark);
+    }
+
+    .button-menu {
+      border: none;
+      background-color: var(--background);
+      font-size: 14px;
+      margin-right: 8px;
+    }
+
+    .cancel-filter-date {
+      background-color: var(--danger);
+      padding: 2px;
+      border-radius: 8px;
+
+      svg {
+        color: #fff;
+      }
+    }
+  }
 `;
 
 export const ContainerPaginator = styled.div`
