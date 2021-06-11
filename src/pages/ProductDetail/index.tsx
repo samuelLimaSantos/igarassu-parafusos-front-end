@@ -75,8 +75,6 @@ const ProductDetail: React.FC = () => {
     </MenuButton>
   );
 
-  // const [name, setName] = useState('');
-
   useEffect(() => {
     const id = location.pathname.split('/').slice(-1)[0];
     setIsLoading(true);
@@ -93,7 +91,6 @@ const ProductDetail: React.FC = () => {
         setCategory(response.data.category_id.title);
         setIsLoading(false);
         setImage(parseImage(response.data.image_id));
-        // setName(response.data.name);
       })
       .catch(error => {
         setIsLoading(false);
@@ -166,39 +163,6 @@ const ProductDetail: React.FC = () => {
       });
   }, [history, product.id, setToastInfo, token, updateInventoryData]);
 
-  // const handleUpdateInventory = useCallback(() => {
-  //   api
-  //     .put(
-  //       `/products/${product.id}`,
-  //       {
-  //         name,
-  //       },
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       },
-  //     )
-  //     .then(() => {
-  //       setToastInfo({
-  //         message: 'Produto atualizado com sucesso!',
-  //         type: 'success',
-  //         showToast: true,
-  //       });
-  //       setIsLoading(false);
-  //       history.push(`/product/${product.id}`);
-  //     })
-  //     .catch(error => {
-  //       setToastInfo({
-  //         message: error.response.data.message,
-  //         type: 'error',
-  //         showToast: true,
-  //         redirectPath: `/product/${product.id}`,
-  //       });
-  //       setIsLoading(false);
-  //     });
-  // }, [history, product.id, setToastInfo, token, name]);
-
   const quitModal = useCallback(
     (modalType: string) => {
       switch (modalType) {
@@ -208,16 +172,12 @@ const ProductDetail: React.FC = () => {
         case 'updateInventory':
           setUpdateInventoryModal(false);
           setUpdateInventoryData(defaultUpdateInventoryData);
-          // setName(product.name);
           break;
         default:
           return '';
       }
     },
-    [
-      defaultUpdateInventoryData,
-      // product.name
-    ],
+    [defaultUpdateInventoryData],
   );
 
   const actionModalButton = useCallback(
@@ -231,19 +191,13 @@ const ProductDetail: React.FC = () => {
           handleUpdateInventory();
           setUpdateInventoryModal(false);
           setUpdateInventoryData(defaultUpdateInventoryData);
-          // setName(product.name);
 
           break;
         default:
           return '';
       }
     },
-    [
-      handleDeleteProduct,
-      handleUpdateInventory,
-      defaultUpdateInventoryData,
-      // product.name,
-    ],
+    [handleDeleteProduct, handleUpdateInventory, defaultUpdateInventoryData],
   );
 
   return (
@@ -332,15 +286,6 @@ const ProductDetail: React.FC = () => {
                     <option value="outcome">Saída</option>
                   </select>
                 </section>
-
-                {/* <section>
-                  <label htmlFor="name">Nome</label>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={({ target }) => setName(target.value)}
-                  />
-                </section> */}
               </UpdateInventoryContent>
             </BaseModal>
           )}
@@ -404,7 +349,8 @@ const ProductDetail: React.FC = () => {
             <label>Quantidade em estoque</label>
             <span>
               {product.quantity} {product.unity}
-              {product.quantity > 1 && `s`}
+              {product.quantity > 1 && product.unity !== 'Par' && `s`}
+              {product.quantity > 1 && product.unity === 'Par' && `es`}
             </span>
           </section>
 

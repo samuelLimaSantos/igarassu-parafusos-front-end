@@ -352,7 +352,10 @@ const ProductUpdate: React.FC = () => {
                     >
                       <option value="Unidade">Unidade</option>
                       <option value="Metro">Metro</option>
-                      <option value="Centímetro">Centímetro</option>
+                      <option value="Quilo">Quilo</option>
+                      <option value="Par">Par</option>
+                      <option value="Cartela">Cartela</option>
+                      <option value="Cento">Cento</option>
                     </select>
                   </div>
 

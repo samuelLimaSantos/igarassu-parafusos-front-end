@@ -36,7 +36,8 @@ const Card: React.FC<IProduct> = (product: IProduct) => {
           </p>
           <p style={{ backgroundColor: 'rgba(242, 146, 146, 0.2)' }}>
             {product.quantity} {product.unity}
-            {product.quantity > 1 && `s`}
+            {product.quantity > 1 && product.unity !== 'Par' && `s`}
+            {product.quantity > 1 && product.unity === 'Par' && `es`}
           </p>
         </section>
 
