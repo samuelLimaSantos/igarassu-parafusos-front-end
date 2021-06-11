@@ -114,7 +114,6 @@ const TransactionHistory: React.FC = () => {
     const { startDate, endDate } = date;
     setStartDate(startDate);
     setEndDate(endDate);
-    // handleGetTransactions({ page: 1, date: { endDate, startDate } });
   };
 
   useEffect(() => {
@@ -124,6 +123,7 @@ const TransactionHistory: React.FC = () => {
   const handleGetTransactionsFiltered = () => {
     setIsFiltered(true);
     setShowModalFilter(false);
+    handleGetTransactions({ page: 1, date: { endDate, startDate } });
   };
 
   const menuIcon = (
@@ -148,7 +148,10 @@ const TransactionHistory: React.FC = () => {
           {isFiltered && (
             <div
               className="cancel-filter-date"
-              onClick={() => setIsFiltered(false)}
+              onClick={() => {
+                setIsFiltered(false);
+                handleGetTransactions({ page: 1 });
+              }}
             >
               <FiX size={30} title="Desfazer filtro" />
             </div>
@@ -207,9 +210,10 @@ const TransactionHistory: React.FC = () => {
             <span>Saídas</span>
             <span>
               <strong>{totalIncomesAndOutcomes.outcomes} </strong>
-              {totalProducts > 1
-                ? `${transactions[0]?.product_id.unity}s`
-                : transactions[0]?.product_id.unity}
+              {transactions.length > 1 &&
+                (totalProducts > 1
+                  ? `${transactions[0]?.product_id.unity}s`
+                  : `${transactions[0]?.product_id.unity}`)}
             </span>
           </div>
 
@@ -217,9 +221,10 @@ const TransactionHistory: React.FC = () => {
             <span>Entradas</span>
             <span>
               <strong>{totalIncomesAndOutcomes.incomes} </strong>
-              {totalProducts > 1
-                ? `${transactions[0]?.product_id.unity}s`
-                : transactions[0]?.product_id.unity}
+              {transactions.length > 1 &&
+                (totalProducts > 1
+                  ? `${transactions[0]?.product_id.unity}s`
+                  : `${transactions[0]?.product_id.unity}`)}
             </span>
           </div>
 
@@ -227,9 +232,10 @@ const TransactionHistory: React.FC = () => {
             <h1>Quantidade atual</h1>
             <span>
               {totalProducts}{' '}
-              {totalProducts > 1
-                ? `${transactions[0]?.product_id.unity}s`
-                : transactions[0]?.product_id.unity}
+              {transactions.length > 1 &&
+                (totalProducts > 1
+                  ? `${transactions[0]?.product_id.unity}s`
+                  : `${transactions[0]?.product_id.unity}`)}
             </span>
           </div>
         </Total>

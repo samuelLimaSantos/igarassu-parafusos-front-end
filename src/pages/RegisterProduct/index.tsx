@@ -117,7 +117,7 @@ const RegisterProduct: React.FC = () => {
       })
       .then(response => {
         setCategories(response.data);
-        setCategory(response.data[0].title);
+        setCategory(response.data.length > 0 ? response.data[0].title : '');
         setIsLoading(false);
       })
       .catch(error => {
