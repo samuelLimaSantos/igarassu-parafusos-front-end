@@ -40,6 +40,7 @@ type Product = {
   quantity: number;
   type: string;
   unity: string;
+  ncm_sh: string;
 };
 
 const ProductUpdate: React.FC = () => {
@@ -56,6 +57,7 @@ const ProductUpdate: React.FC = () => {
     quantity: 0,
     type: '',
     unity: '',
+    ncm_sh: '',
   });
 
   const { setToastInfo } = useContext(Context);
@@ -81,6 +83,8 @@ const ProductUpdate: React.FC = () => {
         break;
 
       case 3:
+        product.ncm_sh.length > 0 &&
+        product.ncm_sh.trim().length !== 0 &&
         product.type.length > 0 &&
         product.type.trim().length !== 0 &&
         product.quantity > 0 &&
@@ -140,6 +144,7 @@ const ProductUpdate: React.FC = () => {
             quantity: product.quantity,
             type: product.type,
             unity: product.unity,
+            ncm_sh: product.ncm_sh,
           },
           {
             headers: {
@@ -322,6 +327,22 @@ const ProductUpdate: React.FC = () => {
 
                 <section className="triple-grid">
                   <div className="container-input">
+                    <label htmlFor="ncm_sh">NCM/SH</label>
+
+                    <input
+                      id="ncm_sh"
+                      value={product.ncm_sh}
+                      onChange={({ target }) => {
+                        setProduct({
+                          ...product,
+                          ncm_sh: target.value,
+                        });
+                      }}
+                      maxLength={600}
+                    />
+                  </div>
+
+                  <div className="container-input">
                     <label htmlFor="type">Tipo do produto</label>
 
                     <input
@@ -358,30 +379,13 @@ const ProductUpdate: React.FC = () => {
                       <option value="Cento">Cento</option>
                     </select>
                   </div>
-
-                  <div className="container-input">
-                    <label htmlFor="quantity">Quantidade</label>
-
-                    <input
-                      id="quantity"
-                      value={product.quantity}
-                      onChange={({ target }) => {
-                        setProduct({
-                          ...product,
-                          quantity: Number(target.value),
-                        });
-                      }}
-                      type="number"
-                      min={1}
-                    />
-                  </div>
                 </section>
 
                 <h3 style={{ marginTop: 60, marginBottom: 32 }}>
-                  Detalhe os preços
+                  Detalhe os preços e quantidade atual no estoque
                 </h3>
 
-                <section className="double-grid">
+                <section className="triple-grid">
                   <div className="container-input">
                     <label htmlFor="price_buy">Preço de compra</label>
 
@@ -412,12 +416,28 @@ const ProductUpdate: React.FC = () => {
                       maxLength={20}
                     />
                   </div>
-                  <div className="container-button">
-                    <button type="submit" disabled={!canSubmit}>
-                      Atualizar
-                    </button>
+                  <div className="container-input">
+                    <label htmlFor="quantity">Quantidade</label>
+
+                    <input
+                      id="quantity"
+                      value={product.quantity}
+                      onChange={({ target }) => {
+                        setProduct({
+                          ...product,
+                          quantity: Number(target.value),
+                        });
+                      }}
+                      type="number"
+                      min={1}
+                    />
                   </div>
                 </section>
+                <div className="container-button">
+                  <button type="submit" disabled={!canSubmit}>
+                    Atualizar
+                  </button>
+                </div>
               </ThirdStep>
             )}
           </fieldset>
