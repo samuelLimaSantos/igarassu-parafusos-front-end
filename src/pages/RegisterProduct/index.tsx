@@ -51,6 +51,7 @@ const RegisterProduct: React.FC = () => {
   const [priceSell, setPriceSell] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [canSubmit, setCanSubmit] = useState(false);
+  const [ncm_sh, setNcmSh] = useState('');
 
   const { setToastInfo } = useContext(Context);
 
@@ -80,6 +81,8 @@ const RegisterProduct: React.FC = () => {
           break;
         }
       case 4:
+        ncm_sh.length > 0 &&
+        ncm_sh.trim().length !== 0 &&
         type.length > 0 &&
         type.trim().length !== 0 &&
         quantity > 0 &&
@@ -105,6 +108,7 @@ const RegisterProduct: React.FC = () => {
     priceBuy,
     priceSell,
     showFieldNewCategory,
+    ncm_sh,
   ]);
 
   useEffect(() => {
@@ -147,6 +151,7 @@ const RegisterProduct: React.FC = () => {
             description,
             image_id: imageId,
             category: showFieldNewCategory ? newCategory : category,
+            ncm_sh,
           },
           {
             headers: {
@@ -188,6 +193,7 @@ const RegisterProduct: React.FC = () => {
       setToastInfo,
       history,
       showFieldNewCategory,
+      ncm_sh,
     ],
   );
 
@@ -372,12 +378,12 @@ const RegisterProduct: React.FC = () => {
 
                 <section className="triple-grid">
                   <div className="container-input">
-                    <label htmlFor="type">Tipo do produto</label>
+                    <label htmlFor="ncm_sh">NCM/SH</label>
 
                     <input
-                      id="type"
-                      value={type}
-                      onChange={({ target }) => setType(target.value)}
+                      id="ncm_sh"
+                      value={ncm_sh}
+                      onChange={({ target }) => setNcmSh(target.value)}
                       maxLength={600}
                     />
                   </div>
@@ -400,25 +406,22 @@ const RegisterProduct: React.FC = () => {
                   </div>
 
                   <div className="container-input">
-                    <label htmlFor="quantity">Quantidade</label>
+                    <label htmlFor="type">Tipo do produto</label>
 
                     <input
-                      id="quantity"
-                      value={quantity}
-                      type="number"
-                      min={1}
-                      onChange={({ target }) => {
-                        setQuantity(Number(target.value));
-                      }}
+                      id="type"
+                      value={type}
+                      onChange={({ target }) => setType(target.value)}
+                      maxLength={600}
                     />
                   </div>
                 </section>
 
                 <h3 style={{ marginTop: 60, marginBottom: 32 }}>
-                  Detalhe os preços
+                  Detalhe os preços e quantidade atual no estoque
                 </h3>
 
-                <section className="double-grid">
+                <section className="triple-grid">
                   <div className="container-input">
                     <label htmlFor="price_buy">Preço de compra</label>
 
@@ -443,12 +446,26 @@ const RegisterProduct: React.FC = () => {
                       maxLength={20}
                     />
                   </div>
-                  <div className="container-button">
-                    <button type="submit" disabled={!canSubmit}>
-                      Cadastrar
-                    </button>
+
+                  <div className="container-input">
+                    <label htmlFor="quantity">Quantidade</label>
+
+                    <input
+                      id="quantity"
+                      value={quantity}
+                      type="number"
+                      min={1}
+                      onChange={({ target }) => {
+                        setQuantity(Number(target.value));
+                      }}
+                    />
                   </div>
                 </section>
+                <div className="container-button">
+                  <button type="submit" disabled={!canSubmit}>
+                    Cadastrar
+                  </button>
+                </div>
               </FourthStep>
             )}
           </fieldset>

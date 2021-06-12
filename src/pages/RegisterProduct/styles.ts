@@ -293,8 +293,8 @@ export const FourthStep = styled.div`
     align-self: center;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    margin-top: 20px;
+    justify-content: center;
+    margin-top: 32px;
 
     button {
       width: 250px;
