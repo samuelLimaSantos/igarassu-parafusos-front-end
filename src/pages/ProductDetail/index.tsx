@@ -25,6 +25,7 @@ type Product = {
   quantity: number;
   type: string;
   unity: string;
+  ncm_sh: string;
 };
 
 type UpdateInventory = {
@@ -57,6 +58,7 @@ const ProductDetail: React.FC = () => {
     type: '',
     unity: '',
     updated_at: '',
+    ncm_sh: '',
   });
   const [category, setCategory] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -321,6 +323,11 @@ const ProductDetail: React.FC = () => {
           </section>
 
           <section className="unit">
+            <label>NCM/SH</label>
+            <span>{product.ncm_sh}</span>
+          </section>
+
+          <section className="unit">
             <label>Unidade</label>
             <span>{product.unity}</span>
           </section>
@@ -359,10 +366,10 @@ const ProductDetail: React.FC = () => {
             <span>{product.created_at}</span>
           </section>
 
-          <section className="unit">
+          {/* <section className="unit">
             <label>Última atualização</label>
             <span>{product.updated_at}</span>
-          </section>
+          </section> */}
         </section>
       </Content>
       <div className="space-bottom" />
