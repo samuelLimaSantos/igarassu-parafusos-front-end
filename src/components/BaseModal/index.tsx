@@ -17,8 +17,8 @@ const BaseModal: React.FC<BaseModalProps> = ({
   actionButton,
 }: BaseModalProps) => {
   return (
-    <Container>
-      <Content>
+    <Container onClick={quitModal}>
+      <Content onClick={e => e.stopPropagation()}>
         <div className="header">
           <h3>{title}</h3>
 
